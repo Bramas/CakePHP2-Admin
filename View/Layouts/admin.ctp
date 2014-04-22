@@ -41,7 +41,10 @@
     </div>
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-4 col-md-3 sidebar">
+        <?php echo $this->element('Admin.extensions_menu'); ?>
+        <?php echo $this->element('Admin.menu_tree'); ?>
+<!--
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview</a></li>
             <li><a href="#">Reports</a></li>
@@ -60,15 +63,21 @@
             <li><a href="">One more nav</a></li>
             <li><a href="">Another nav item</a></li>
           </ul>
+          -->
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h1 class="page-header">Dashboard</h1>
+        <div id="admin-connexion-status" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3">
+
+        </div>
+        <div id="ajaxPageProgressBar" class="finished col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3">
+          <span style="width: 25%"><span></span></span>
+        </div>
+        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
 
 
-          <?php echo $this->Session->flash(); ?>
-
-          <?php echo $this->fetch('content'); ?>
-
+          <div id="layoutContent">
+            <?php echo $this->Session->flash(); ?>
+            <?php echo $this->fetch('content'); ?>
+          </div>
 
 
         </div>

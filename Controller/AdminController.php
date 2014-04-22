@@ -6,7 +6,8 @@ class AdminController extends AdminAppController {
 
 
     public function admin_index() {
-        $extensions = Configure::read('Extensions');
+
+
         /*$plugins = Admin::getModels();
         $counts = array();
 

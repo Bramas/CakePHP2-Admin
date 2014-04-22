@@ -5,7 +5,7 @@ class UsersController extends AdminAppController {
 
     public function beforeFilter()
     {
-        $this->Auth->allow(array('add', 'logout'));
+        $this->Auth->allow(array('add', 'login', 'logout'));
         return parent::beforeFilter();
     }
 
@@ -32,15 +32,15 @@ class UsersController extends AdminAppController {
             $this->User->set($this->request->data);
             if(!$this->User->validates())
             {
-                $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli')); 
+                $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli'),, 'Admin.flash_warning'); 
                 $this->set('errors', $this->User->validationErrors);
             }
             else
             if ($this->User->save()) {
-                $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'));
+                $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'), 'Admin.flash_success');
                 return $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'));
+                $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'), 'Admin.flash_error');
             }
         }
     }
@@ -52,10 +52,10 @@ class UsersController extends AdminAppController {
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'));
+                $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'), 'Admin.flash_success');
                 return $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'));
+                $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'), 'Admin.flash_error');
             }
         } else {
             $this->request->data = $this->User->read(null, $id);
@@ -71,10 +71,10 @@ class UsersController extends AdminAppController {
             throw new NotFoundException(__('User invalide'));
         }
         if ($this->User->delete()) {
-            $this->Session->setFlash(__('User supprimé'));
+            $this->Session->setFlash(__('User supprimé'), 'Admin.flash_success');
             return $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('L\'utilisateur n\'a pas été supprimé'));
+        $this->Session->setFlash(__('L\'utilisateur n\'a pas été supprimé'), 'Admin.flash_error');
         return $this->redirect(array('action' => 'index'));
     }
 
@@ -84,9 +84,10 @@ class UsersController extends AdminAppController {
                 return $this->redirect($this->Auth->redirect());
             } else {
                 debug($this->request->data);
-                $this->Session->setFlash(__("Nom d'utilisateur ou mot de passe invalide, réessayer"));
+                $this->Session->setFlash(__("Nom d'utilisateur ou mot de passe invalide, réessayer"), 'Admin.flash_warnin');
             }
         }
+        $this->layout = 'Admin.login';
     }
 
     public function logout() {

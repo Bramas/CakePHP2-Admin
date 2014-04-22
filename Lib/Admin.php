@@ -35,6 +35,47 @@ class Admin {
         return self::$_cache[$key];
     }
 
+
+
+    public static function getViews() {
+        return self::cache(__METHOD__, function() {
+            $controllers = App::objects('Controller');
+            $map = array();
+
+            foreach ($controllers as $controller) {
+                $info = Admin::getControllerInfo($controller);
+                if(empty($info))
+                {
+                    continue;
+                }
+                foreach($info as $action => $config)
+                {
+                    $map[] = array(
+                            'controller' => Admin::parseControllerClass($controller),
+                            'action' => $action,
+                            'label' => $config['title']
+                        );
+                }
+            }
+
+            return $map;
+        });
+    }
+    public static function getControllerInfo($controller) {
+        App::uses($controller, 'Controller');
+        $Object = new $controller;
+        if(empty($Object->adminViews))
+        {
+            return array();
+        }
+        return $Object->adminViews;
+    }
+
+    public static function parseControllerClass($controllerClass)
+    {
+        return strtolower(preg_replace('/Controller/', '', $controllerClass));
+    }
+
     /**
      * Return a list of all models grouped by plugin.
      *

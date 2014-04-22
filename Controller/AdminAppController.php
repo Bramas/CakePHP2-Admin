@@ -14,8 +14,15 @@ class AdminAppController extends AppController {
     );
     public function beforeFilter()
     {
+        if(!empty($_GET['ajax']))
+        {
+            $this->layout = 'ajax';
+        }
+        else
+        {
+            $this->layout = 'admin';
+        }
         parent::beforeFilter();
-        $this->layout = 'admin';
     }
 
 

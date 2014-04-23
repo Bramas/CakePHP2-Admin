@@ -32,7 +32,7 @@ class UsersController extends AdminAppController {
             $this->User->set($this->request->data);
             if(!$this->User->validates())
             {
-                $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli'),, 'Admin.flash_warning'); 
+                $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli'), 'Admin.flash_warning'); 
                 $this->set('errors', $this->User->validationErrors);
             }
             else

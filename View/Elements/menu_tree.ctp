@@ -156,10 +156,11 @@ jQuery(function ($) {
 	$('#jstree').on('activate_node.jstree',function(ev, data){
 		var url = $('#'+data.node.id).attr('data-menu-url');
 
+		adminSelectNode(data.node);
 		adminLoadLayoutContent({
 			url     : url, 
 			title   : data.node.text, 
-			callback: 'activate_node', 
+			callback: 'adminSelectNode', 
 			context :  data.node
 		});
 		//window.location = url;

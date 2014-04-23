@@ -24,7 +24,7 @@ foreach($extensions as $name => $config)
     }
 }
 ?>
-<ul class="nav nav-sidebar">
+<ul data-admin-toggle="ajax" class="nav nav-sidebar">
 <?php foreach($menu as $title => $url): ?>
 	<li<?php if($this->Html->url($url) == $this->request->here) echo ' class="active"';?>><?php echo $this->Html->link($title,$url); ?></li>
 <?php endforeach; ?>

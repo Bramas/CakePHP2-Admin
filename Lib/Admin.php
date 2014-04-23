@@ -43,7 +43,7 @@ class Admin {
             $map = array();
 
             foreach ($controllers as $controller) {
-                $info = Admin::getControllerInfo($controller);
+                $info = Admin::getControllerInfo('', $controller);
                 if(empty($info))
                 {
                     continue;
@@ -61,9 +61,10 @@ class Admin {
             return $map;
         });
     }
-    public static function getControllerInfo($controller) {
-        App::uses($controller, 'Controller');
-        $Object = new $controller;
+    public static function getControllerInfo($plugin, $controller) {
+        Admin::importControllerClass($plugin, $controller);
+        $controllerClass = Admin::getControllerClassName($controller);
+        $Object = new $controllerClass;
         if(empty($Object->adminViews))
         {
             return array();
@@ -71,11 +72,99 @@ class Admin {
         return $Object->adminViews;
     }
 
+    public static function getControllerClassName($controller)
+    {
+        return ucfirst(Admin::parseControllerClass($controller)).'Controller';
+    }
     public static function parseControllerClass($controllerClass)
     {
         return strtolower(preg_replace('/Controller/', '', $controllerClass));
     }
 
+    public static function importControllerClass($plugin, $controller)
+    {
+        $controllerClass = Admin::getControllerClassName($controller);
+
+        if(empty($plugin))
+        {
+            App::uses($controllerClass, 'Controller');
+            return;
+        }
+        App::uses($controllerClass, $plugin.'.Controller');
+    }
+
+    public static function getAdminView($plugin,$controller = null, $view = null, $args='')
+    {
+        if(empty($controller) && is_array($plugin))
+        {
+            if(empty($plugin['Menu']))
+            {
+                return false;
+            }
+            $controller = $plugin['Menu']['controller'];
+            $view = $plugin['Menu']['view'];
+            $args = $plugin['Menu']['args'];
+            $plugin = empty($plugin['Menu']['plugin'])?false:$plugin['Menu']['plugin'];
+        }
+
+        $info = Admin::getControllerInfo($plugin, $controller);
+        if(empty($info[$view]))
+        {
+            return false;
+        }
+        $controllerClassName = $controller.'Controller';
+        Admin::importControllerClass($plugin,$controller);
+
+        $ret = array();
+        $defaultUrl = array(
+                'controller' => $controller,
+                'action' => $view,
+                'plugin' => $plugin,
+                $args
+            );
+
+        $ret['frontend'] = array(
+                'url' => $defaultUrl,
+                'method' => $defaultUrl['action']
+            );
+        $ret['frontend']['exists'] = method_exists($controllerClassName, $ret['frontend']['method']);
+
+        $defaultUrl['admin'] = true;
+        if(!empty($info[$view]['edit']))
+        {
+            $defaultUrl['action'] = $info[$view]['edit'];
+        }
+        $ret['edit'] = array(
+                'url' => $defaultUrl,
+                'method' => 'admin_'.$defaultUrl['action']
+            );
+        $ret['edit']['exists'] = method_exists($controllerClassName, $ret['edit']['method']);
+
+        if(!empty($info[$view]['save']))
+        {
+            $defaultUrl['action'] = $info[$view]['save'];
+        }
+        $ret['save'] = array(
+                'url' => $defaultUrl,
+                'method' => 'admin_'.$defaultUrl['action']
+            );
+        $ret['save']['exists'] = method_exists($controllerClassName, $ret['save']['method']);
+
+        if(!empty($info[$view]['delete']))
+        {
+            $defaultUrl['action'] = $info[$view]['delete'];
+        }
+        else
+        {
+            $defaultUrl['action'] .= '_delete';
+        }
+        $ret['delete'] = array(
+                'url' => $defaultUrl,
+                'method' => 'admin_'.$defaultUrl['action']
+            );
+        $ret['delete']['exists'] = method_exists($controllerClassName, $ret['delete']['method']);
+        return $ret;
+    }
     /**
      * Return a list of all models grouped by plugin.
      *

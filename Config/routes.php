@@ -52,3 +52,24 @@ Router::connect(
 	'/admin',
 	array('controller' => 'admin', 'action' => 'index', 'plugin'=>'admin', 'admin' => true)
 );
+
+
+
+App::uses('AdminRoute', 'Admin.Routing/Route');
+$routeClass = 'AdminRoute';
+
+Router::connect('/', 
+	array(),
+	array('routeClass' => 'AdminRoute')
+);
+
+Router::connect('/:slug', array(),
+						array(
+                        	'routeClass' => $routeClass
+                        ));
+Router::connect('/:slug/*', array(),
+						array(
+                        	'routeClass' => $routeClass
+                        ));
+
+

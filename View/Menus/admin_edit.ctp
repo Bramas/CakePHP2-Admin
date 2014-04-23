@@ -1,9 +1,24 @@
 <?php
 
-echo $this->AdminForm->create('Menu', array('url' => array('action' => 'save', $id, $controller, $save_action)));
-echo $this->AdminForm->input('id', array('type' => 'hidden'));
-echo $this->AdminForm->input('title', array('type' => 'text'));
+/*
+echo $this->element('Admin.panel_header', array(
+	'title'=>'Menu'
+		));
+*/
 
+
+echo $this->AdminForm->create('Menu', array('url' => array('action' => 'save')));
+echo $this->AdminForm->input('id', array('type' => 'hidden'));
+echo $this->AdminForm->input('title', array('type' => 'text', 'id'=>'menuTitleInput', 'label' => 'Titre'));
+?>
+<div class="form-group">
+	<div class="input-group input-group-sm">
+		<span class="input-group-addon"><?php echo $this->Html->url('/',true); ?></span>
+		
+<?php echo $this->AdminForm->input('slug', array('data-admin-toggle' => 'slug' ,'data-admin-slug-id' => 'menuTitleInput', 'after' => false, 'before'=>false,'type' => 'text', 'label' => false)); ?>
+	</div>
+</div>
+<?php
 echo $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
 
 

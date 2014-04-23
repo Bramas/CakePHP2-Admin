@@ -44,25 +44,39 @@ function adminSetLayoutContent(content)
 {
 	tinymce.remove();
 	$('#layoutContent').html(content);
-	adminInitTinyMce();
+	adminPanelLoaded();
 	adminSetAjaxPageProgress(1);
 }
-function activate_node()
+function adminSelectLink(link)
 {
+	if(!link)
+	{
+		link = this;
+	}
+	$('li').removeClass('active');
 	$('#jstree').jstree(true).deselect_all();
-	$('#jstree').jstree(true).select_node(this);
+	$(link).addClass('active');
+}
+function adminSelectNode(node)
+{
+	if(!node)
+	{
+		node = this;
+	}
+	$('li').removeClass('active');
+	$('#jstree').jstree(true).deselect_all();
+	$('#jstree').jstree(true).select_node(node);
 }
 window.onpopstate = function(ev)
 {
 	if(ev.state)
 	{
 		adminLoadLayoutContent(ev.state.url);
-		window[ev.state.callback].apply(ev.state.context);
+		if(ev.state.callback)
+		{
+			window[ev.state.callback].apply(ev.state.context);
+		}
 		ev.preventDefault();
-	}
-	else
-	{
-		adminLoadLayoutContent(AdminFirstUrl);
 	}
 }
 function adminConnexionLost()
@@ -79,7 +93,16 @@ function adminConnexionWin()
 	adminConnected = true;
 	$('#admin-connexion-status').hide('fast');
 }
+function adminMakeid(length)
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    for( var i=0; i < length; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
 function adminLoadLayoutContent(state)
 {
 	if(state.url && state.url == window.location.pathname)
@@ -92,7 +115,7 @@ function adminLoadLayoutContent(state)
 	$.ajax({
 		url: url,
 		type:'GET',
-		data:{ajax:1},
+		data:{ajax:1, type:'plain'},
 		xhrFields: {
 			onprogress: function (e) {
 				if (e.lengthComputable) {
@@ -115,13 +138,56 @@ function adminLoadLayoutContent(state)
 			{
 				history.pushState(this, this.title, this.url);
 			}
-			adminSetAjaxPageProgress(1);
 			adminSetLayoutContent(data)
 		}
 	});
 }
 
+function adminToSlug(str)
+{
+	return str.replace(/[^a-zA-Z\-\_]/g, '-');
+}
+
+function adminPanelLoaded()
+{
+
+	adminInitTinyMce();
+	$('input[data-admin-toggle=slug]').each(function()
+	{
+			var id = $(this).attr('data-admin-slug-id');
+			var handler =  function(ev){
+				$(ev.data).attr('placeholder', adminToSlug($(this).val()));
+			};
+
+			$(this).attr('placeholder', adminToSlug($('#'+id).val()));
+			$('#'+id).on('change', this, handler);
+			$('#'+id).on('keyup', this, handler);
+	});
+	// dont know why it is not automatic
+	$('a[data-toggle=tooltip]').tooltip();
+}
 
 jQuery(function($){
-	adminInitTinyMce();
+	adminPanelLoaded();
+	history.replaceState({url:window.location.href})
+
+
+	$('.nav[data-admin-toggle=ajax] li > a').on('click', function(ev){
+		ev.preventDefault();
+
+		var clickId = $(this).parent().attr('admin-menu-click-id');
+		if(!clickId)
+		{
+			clickId = adminMakeid(10);
+			$(this).parent().attr('admin-menu-click-id', clickId);
+		}
+		adminSelectLink('li[admin-menu-click-id='+clickId+']');
+		adminLoadLayoutContent({
+			url:$(this).attr('href'),
+			title:$(this).attr('title'),
+			callback:'adminSelectLink',
+			context:'li[admin-menu-click-id='+clickId+']'
+		});
+	})
 });
+

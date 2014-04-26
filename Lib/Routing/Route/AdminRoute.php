@@ -17,9 +17,7 @@ class AdminRoute extends CakeRoute {
             $url = array('pass' => array());
         }
        
-        //exit(debug($params));
-        
-        
+
         App::uses('Menu','Admin.Model');
         $Menu = new Menu();
 
@@ -35,7 +33,7 @@ class AdminRoute extends CakeRoute {
 	    if(empty($menu))
         {
             $params['controller']=$params['slug'];
-            if(count($params['pass']))
+            if(!empty($params['pass']) && count($params['pass']))
             {
                 $params['action']=$params['pass'][0];
                 unset($params['pass'][0]);

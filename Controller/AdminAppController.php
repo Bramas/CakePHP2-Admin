@@ -7,8 +7,12 @@ class AdminAppController extends AppController {
         'Auth' => array(
             'authorize' => array('Controller'),
             'authenticate' => array(
-                'Basic' => array('userModel' => 'Admin.User'),
-                'Form' => array('userModel' => 'Admin.User')
+                'Basic' => array(
+                    'userModel' => 'Admin.User', 
+                    'passwordHasher' => 'Blowfish'),
+                'Form' => array(
+                    'userModel' => 'Admin.User', 
+                    'passwordHasher' => 'Blowfish')
                 )
         )
     );
@@ -28,7 +32,7 @@ class AdminAppController extends AppController {
 
     public function isAuthorized($user) {
         // Admin peut accéder à toute action
-        if (isset($user['role']) && $user['role'] === 'administrator') {
+        if (isset($user['role_id']) && $user['role_id'] == '1') {
             return true;
         }
 

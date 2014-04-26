@@ -4,9 +4,9 @@
         <legend><?php echo __('Add User'); ?></legend>
         <?php echo $this->Form->input('username');
         echo $this->Form->input('password');
-        echo $this->Form->input('role', array(
+        echo $this->Form->input('role_id', array(
         	'label' => 'Role',
-            'options' => array('administrator' => 'Administrator', 'author' => 'Author')
+            'options' => $Roles
         ));
     ?>
     </fieldset>

@@ -22,6 +22,16 @@ Router::connect(
 	array('controller' => 'users', 'plugin'=>'admin', 'admin' => false, 'action' => 'login')
 );
 
+Router::connect(
+	'/admin/users/:action',
+	array('controller' => 'users', 'plugin'=>'admin', 'admin' => true)
+);
+
+Router::connect(
+	'/admin/users/:action/*',
+	array('controller' => 'users', 'plugin'=>'admin', 'admin' => true)
+);
+
 
 /*Router::connect(
 	'/admin/users/:action',
@@ -52,8 +62,6 @@ Router::connect(
 	'/admin',
 	array('controller' => 'admin', 'action' => 'index', 'plugin'=>'admin', 'admin' => true)
 );
-
-
 
 App::uses('AdminRoute', 'Admin.Routing/Route');
 $routeClass = 'AdminRoute';

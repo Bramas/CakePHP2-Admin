@@ -3,9 +3,8 @@
 class UsersController extends AdminAppController {
 
 
-    public function beforeFilter()
-    {
-        $this->Auth->allow(array('add', 'login', 'logout'));
+    public function beforeFilter(){
+        $this->Auth->allow(array('login', 'logout'));
         return parent::beforeFilter();
     }
 
@@ -13,12 +12,12 @@ class UsersController extends AdminAppController {
         return parent::isAuthorized($user);
     }
 
-    public function index() {
+    public function admin_index() {
         $this->User->recursive = 0;
-        $this->set('users', $this->paginate());
+        $this->set('Users', $this->paginate());
     }
 
-    public function view($id = null) {
+    public function admin_view($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
             throw new NotFoundException(__('User invalide'));
@@ -26,7 +25,10 @@ class UsersController extends AdminAppController {
         $this->set('user', $this->User->read(null, $id));
     }
 
-    public function add() {
+    public function admin_add() {
+    }
+
+    public function admin_edit($id = null) {
         if ($this->request->is('post')) {
             $this->User->create();
             $this->User->set($this->request->data);
@@ -42,28 +44,20 @@ class UsersController extends AdminAppController {
             } else {
                 $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'), 'Admin.flash_error');
             }
+            $this->redirect(array($this->User->id));
+            exit();
         }
-    }
 
-    public function edit($id = null) {
         $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('User Invalide'));
-        }
-        if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'), 'Admin.flash_success');
-                return $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('L\'utilisateur n\'a pas été sauvegardé. Merci de réessayer.'), 'Admin.flash_error');
-            }
-        } else {
+        if ($this->User->exists()) {
             $this->request->data = $this->User->read(null, $id);
             unset($this->request->data['User']['password']);
         }
+        
+        $this->set('Roles', $this->User->Role->find('list'));
     }
 
-    public function delete($id = null) {
+    public function admin_delete($id = null) {
         $this->request->onlyAllow('post');
 
         $this->User->id = $id;

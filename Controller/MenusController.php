@@ -1,12 +1,19 @@
 <?php
 
 App::uses('Admin', 'Admin.Lib');
+App::uses('AdminAppController', 'Admin.Controller');
 
 class MenusController extends AdminAppController {
 
 
 	var $helpers = array('Admin.AdminForm');
     var $uses = array('Admin.Menu');
+
+
+    public $adminViews = array(
+                    'root_menu' => array(
+                        'title' => 'Contient d\'autres liens'
+                    ));
 
     public function admin_edit($id) {
         $menu = $this->Menu->findById($id);
@@ -22,7 +29,12 @@ class MenusController extends AdminAppController {
        	$this->set('id', $id);
         $this->request->data = $menu;
 
-        $this->set('url', $url);
+        $menu_item_content = '';
+        if($view['edit']['exists'])
+        {
+            $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+        }
+        $this->set('menu_item_content', $menu_item_content);
     }
 
     public function admin_move()
@@ -147,7 +159,7 @@ class MenusController extends AdminAppController {
 
     	$this->redirect(array('action' =>'edit', $id));
     }
-	public function admin_menu_edit($id=null) {
+	public function admin_root_menu($id=null) {
         if(!empty($this->request->data))
         {
             return $this->request->data['Menu']['id'];
@@ -155,6 +167,11 @@ class MenusController extends AdminAppController {
 		$this->layout = 'Admin.admin_panel';
 		$this->request->data = $this->Menu->findById($id);
 	}
+    public function root_menu($id = null)
+    {
+        $menu = $this->Menu->children(Configure::read('Admin.Menu.id'));
+        exit(debug($menu));
+    }
 
 	public function admin_create_menu($parent_id)
 	{
@@ -168,11 +185,11 @@ class MenusController extends AdminAppController {
 	    $this->redirect(array('action' => 'create_page', $this->Menu->id));
 	    exit();
 	}
-	public function admin_create_page($id, $controller = null, $action=null, $admin_action = null)
+	public function admin_create_page($id, $controller = null, $action = null, $plugin = null)
 	{
 		if(!empty($action)){
 
-			$data = array('id'=>$id, 'controller' => $controller, 'action' => $action, 'admin_action' => $admin_action);
+			$data = array('id'=>$id, 'plugin' => $plugin, 'controller' => $controller, 'view' => $action);
 			$this->Menu->save(array('Menu' => $data));
 			$this->redirect(array('action' => 'edit', $id));
 			exit();

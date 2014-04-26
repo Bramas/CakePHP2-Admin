@@ -13,7 +13,7 @@ class InstallShell extends AppShell {
         $this->Menu->save(array(
         	'plugin' => 'Admin',
         	'controller' => 'menus',
-        	'view' 		=> 'menu_edit',
+        	'view' 		=> 'root_menu',
         	'default'	=> 1,
         	'slug' => __('Menu-Principal'),
         	'title' => __('Menu Principal')));

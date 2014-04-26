@@ -51,8 +51,9 @@ class Admin {
                 foreach($info as $action => $config)
                 {
                     $map[] = array(
+                            'plugin' => '',
                             'controller' => Admin::parseControllerClass($controller),
-                            'action' => $action,
+                            'view' => $action,
                             'label' => $config['title']
                         );
                 }

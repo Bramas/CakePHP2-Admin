@@ -19,7 +19,8 @@ echo $this->AdminForm->input('title', array('type' => 'text', 'id'=>'menuTitleIn
 	</div>
 </div>
 <?php
-echo $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+
+echo $menu_item_content;
 
 
 echo $this->AdminForm->submit('Enregistrer');

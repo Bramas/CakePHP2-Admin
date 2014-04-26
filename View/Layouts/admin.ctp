@@ -29,6 +29,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><?php echo $this->Html->link('Dashboard','/admin'); ?></li>
+            <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
             <li><a href="#">Settings</a></li>
             <li><a href="#">Profile</a></li>
             <li><a href="#">Help</a></li>

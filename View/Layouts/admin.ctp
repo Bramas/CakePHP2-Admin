@@ -29,9 +29,16 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><?php echo $this->Html->link('Dashboard','/admin'); ?></li>
-            <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
+            <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      Utilisateurs <span class="caret"></span>
+              <ul class="dropdown-menu">
+                <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
+                <li><?php echo $this->Html->link('Roles','/admin/roles'); ?></li>
+                <li><?php echo $this->Html->link('Permissions','/admin/capabilities'); ?></li>
+                <li><a href="#">Mon profil</a></li>
+              </ul>
+            </li>
             <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">

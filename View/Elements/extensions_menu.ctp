@@ -1,5 +1,5 @@
 <?php
-
+/*
 $extensions = Configure::read('Admin.Extensions');
 
 $menu = array();
@@ -29,3 +29,4 @@ foreach($extensions as $name => $config)
 	<li<?php if($this->Html->url($url) == $this->request->here) echo ' class="active"';?>><?php echo $this->Html->link($title,$url); ?></li>
 <?php endforeach; ?>
 </ul>
+*/

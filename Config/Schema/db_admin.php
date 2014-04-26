@@ -84,7 +84,7 @@ class DbAdminSchema extends CakeSchema {
 	public $capabilities_roles = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'role_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
-		'capabilitie_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
+		'capability_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
 		        'engine' => 'InnoDB',

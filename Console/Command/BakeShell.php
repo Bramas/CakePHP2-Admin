@@ -8,7 +8,7 @@ ln -s ../Plugin/Admin/Bakery/Posts/Model/Posts Model/Post.php
 
 ln -s ../Plugin/Admin/Bakery/Pages/View/Pages View/Pages
 ln -s ../Plugin/Admin/Bakery/Pages/Controller/PagesController.php Controller/PagesController.php
-ln -s ../Plugin/Admin/Bakery/Pages/Model/Pages Model/Post.php
+ln -s ../Plugin/Admin/Bakery/Pages/Model/Pages Model/Page.php
 */
 
 class BakeShell extends AppShell {

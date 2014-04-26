@@ -22,15 +22,27 @@ Router::connect(
 	array('controller' => 'users', 'plugin'=>'admin', 'admin' => false, 'action' => 'login')
 );
 
-Router::connect(
-	'/admin/users/:action',
-	array('controller' => 'users', 'plugin'=>'admin', 'admin' => true)
-);
+foreach(array(
+	'users',
+	'roles',
+	'capabilities'
+	) as $controller)
+{
+	Router::connect(
+		'/admin/'.$controller,
+		array('controller' => $controller, 'action' => 'index', 'plugin'=>'admin', 'admin' => true)
+	);
+	Router::connect(
+		'/admin/'.$controller.'/:action',
+		array('controller' => $controller, 'plugin'=>'admin', 'admin' => true)
+	);
 
-Router::connect(
-	'/admin/users/:action/*',
-	array('controller' => 'users', 'plugin'=>'admin', 'admin' => true)
-);
+	Router::connect(
+		'/admin/'.$controller.'/:action/*',
+		array('controller' => $controller, 'plugin'=>'admin', 'admin' => true)
+	);
+}
+
 
 
 /*Router::connect(

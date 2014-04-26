@@ -29,16 +29,16 @@ class UsersController extends AdminAppController {
     }
 
     public function admin_edit($id = null) {
-        if ($this->request->is('post')) {
+        if (!empty($this->request->data)) {
             $this->User->create();
             $this->User->set($this->request->data);
-            if(!$this->User->validates())
+            if(!$this->request->data['User']['id'] && !$this->User->validates())
             {
                 $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli'), 'Admin.flash_warning'); 
                 $this->set('errors', $this->User->validationErrors);
             }
             else
-            if ($this->User->save()) {
+            if ($this->User->save(null, false)) {
                 $this->Session->setFlash(__('L\'utilisateur a été sauvegardé'), 'Admin.flash_success');
                 return $this->redirect(array('action' => 'index'));
             } else {
@@ -58,7 +58,6 @@ class UsersController extends AdminAppController {
     }
 
     public function admin_delete($id = null) {
-        $this->request->onlyAllow('post');
 
         $this->User->id = $id;
         if (!$this->User->exists()) {

@@ -27,3 +27,5 @@ $actions = array(
 	);
 
 echo $this->element('Admin.table', array('actions'=>$actions , 'columns' => $columns, 'data' => $Roles, 'model' => 'Role'));
+
+debug($Roles);

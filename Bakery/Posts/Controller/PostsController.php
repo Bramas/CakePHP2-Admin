@@ -14,6 +14,11 @@ class PostsController extends AppController {
 						'title' => 'Afficher la liste des actualité',
 						'edit' => 'index_options'
 					));
+	public $adminMenu = array(
+			'Actualité' => array(
+				'action' => 'index'
+				)
+			);
 	public $components = array('Auth');
 
 	public function beforeFilter()
@@ -59,7 +64,15 @@ class PostsController extends AppController {
 		{
 			return implode('-',$this->request->data['PostOptions']);
 		}
-		list($count, $type) = explode('-',$options);
+		if(strpos($options, '-') === false)
+		{
+			$count = 10;
+			$type = 'list';
+		}
+		else
+		{
+			list($count, $type) = explode('-',$options);
+		}
 		$this->request->data['PostOptions'] = array(
 			'count'=>$count,
 			'type' =>$type);

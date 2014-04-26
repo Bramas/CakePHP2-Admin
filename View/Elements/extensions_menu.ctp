@@ -22,11 +22,15 @@ foreach($extensions as $name => $config)
             $menu[$title] = array_merge($url, array('controller' => $controller, 'admin' => true, 'plugin' => false));
         }
     }
-}
+}*/
+App::uses('Admin', 'Admin.Lib');
+
+$menu = Admin::getAdminMenu();
+
 ?>
 <ul data-admin-toggle="ajax" class="nav nav-sidebar">
 <?php foreach($menu as $title => $url): ?>
 	<li<?php if($this->Html->url($url) == $this->request->here) echo ' class="active"';?>><?php echo $this->Html->link($title,$url); ?></li>
 <?php endforeach; ?>
 </ul>
-*/
+

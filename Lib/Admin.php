@@ -44,11 +44,11 @@ class Admin {
 
             foreach ($controllers as $controller) {
                 $info = Admin::getControllerInfo('', $controller);
-                if(empty($info))
+                if(empty($info['adminViews']))
                 {
                     continue;
                 }
-                foreach($info as $action => $config)
+                foreach($info['adminViews'] as $action => $config)
                 {
                     $map[] = array(
                             'plugin' => '',
@@ -66,11 +66,16 @@ class Admin {
         Admin::importControllerClass($plugin, $controller);
         $controllerClass = Admin::getControllerClassName($controller);
         $Object = new $controllerClass;
-        if(empty($Object->adminViews))
+        $ret = array('adminMenu' => false, 'adminViews' => false);
+        if(!empty($Object->adminViews))
         {
-            return array();
+            $ret['adminViews'] = $Object->adminViews;
         }
-        return $Object->adminViews;
+        if(!empty($Object->adminMenu))
+        {
+            $ret['adminMenu'] = $Object->adminMenu;
+        }
+        return $ret;
     }
 
     public static function getControllerClassName($controller)
@@ -109,10 +114,12 @@ class Admin {
         }
 
         $info = Admin::getControllerInfo($plugin, $controller);
-        if(empty($info[$view]))
+        if(empty($info['adminViews']) || empty($info['adminViews'][$view]))
         {
             return false;
         }
+        $info = $info['adminViews'];
+
         $controllerClassName = $controller.'Controller';
         Admin::importControllerClass($plugin,$controller);
 
@@ -166,6 +173,35 @@ class Admin {
         $ret['delete']['exists'] = method_exists($controllerClassName, $ret['delete']['method']);
         return $ret;
     }
+
+
+    public static function getAdminMenu()
+    {
+        return self::cache(__METHOD__, function() {
+            $controllers = App::objects('Controller');
+            $map = array();
+
+            foreach ($controllers as $controller) {
+                $info = Admin::getControllerInfo('', $controller);
+                if(empty($info['adminMenu']))
+                {
+                    continue;
+                }
+                foreach($info['adminMenu'] as $label => $url)
+                {
+                    $map[$label] = 
+                    array_merge($url ,
+                        array(
+                            'plugin' => '',
+                            'controller' => Admin::parseControllerClass($controller)
+                        ));
+                }
+            }
+
+            return $map;
+        });
+    }
+
     /**
      * Return a list of all models grouped by plugin.
      *

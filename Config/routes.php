@@ -24,8 +24,7 @@ Router::connect(
 
 foreach(array(
 	'users',
-	'roles',
-	'capabilities'
+	'roles'
 	) as $controller)
 {
 	Router::connect(

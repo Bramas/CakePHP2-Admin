@@ -24,7 +24,7 @@ $addNew['options']['class'] .= ' btn btn-default btn-sm';
 *	title is used for the title of the panel
 */
 ?>
-<h1>
+<h1 class="admin-panel-header">
 <?php if(!empty($backUrl)) echo $this->Html->link(
 '',
 $backUrl,

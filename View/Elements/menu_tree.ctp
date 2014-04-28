@@ -1,4 +1,5 @@
 <?php
+App::uses('Admin', 'Admin.Lib');
 
 $here = $this->request->here;
 function printNode($Html, $node, $here)
@@ -25,7 +26,7 @@ function printNode($Html, $node, $here)
 }
 
 
-$Menus = $this->requestAction(array('controller' => 'menus', 'action' => 'all' , 'plugin' => 'admin', 'admin' => true), array());
+$Menus = $this->requestAction(array('controller' => 'menus', 'action' => 'list' , 'plugin' => 'admin', 'admin' => true), array());
 
 
 ?>
@@ -37,6 +38,9 @@ $Menus = $this->requestAction(array('controller' => 'menus', 'action' => 'all' ,
 
 <script type="text/javascript">
 
+var canCreateNode = <?php echo Admin::hasCapability('admin.menu.create_menu')?'true':'false'; ?>;
+var canDeleteNode = <?php echo Admin::hasCapability('admin.menu.delete')?'true':'false'; ?>;
+var canEditNode = <?php echo Admin::hasCapability('admin.menu.edit')?'true':'false'; ?>;
 
 jQuery(function ($) { 
 	$('#jstree').jstree(
@@ -45,13 +49,16 @@ jQuery(function ($) {
 	      check_callback :  function (operation, node, node_parent, node_position, more) {
 	            // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
 	            // in case of 'rename_node' node_position is filled with the new node name
-	            if(operation === 'rename_node'
-	            	|| operation === 'move_node'
-	            	|| operation === 'create_node')
+	            if((operation === 'rename_node'
+	            	|| operation === 'move_node') && canEditNode)
 	            {
 	            	return true;
 	            }
-	            if(operation === 'delete_node')
+	            if(operation === 'create_node' && canCreateNode)
+	            {
+	            	return true;
+	            }
+	            if(operation === 'delete_node' && canDeleteNode)
 	            {
 	            	{
 	            		return true;
@@ -80,26 +87,35 @@ jQuery(function ($) {
 		contextmenu: {
 			select_node:false,
 			items:function (node) {
-			var tree = $("#jstree").jstree(true);
-        	return {
-				create:{
-					label:"Nouvelle Page",
-					action:function(ev){ 
-						createMenu(tree,node)
-					},
-                	separator_after: true
-				},
-				rename:{
-                	separator_before: true,
-					label:"Renommer",
-					action:function(ev){ tree.edit(node); }
-				},
-				delete:{
-					label:"Supprimer",
-					action:function(ev){ deleteMenu(tree,node); }
+				var tree = $("#jstree").jstree(true);
+				ret = {}
+				if(canCreateNode)
+				{
+					ret.create = {
+						label:"Nouvelle Page",
+						action:function(ev){ 
+							createMenu(tree,node)
+						},
+	                	separator_after: true
+					};
 				}
-
-			}}
+				if(canEditNode)
+				{
+					ret.rename = {
+	                	separator_before: true,
+						label:"Renommer",
+						action:function(ev){ tree.edit(node); }
+					};
+				}
+				if(canDeleteNode)
+				{
+					ret.delete = {
+						label:"Supprimer",
+						action:function(ev){ deleteMenu(tree,node); }
+					};
+				}
+	        	return ret;
+	        }
 		},
 	    plugins : [ "types" , "dnd" , "contextmenu" , "state"]
 	}); 

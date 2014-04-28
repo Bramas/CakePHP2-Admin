@@ -45,32 +45,60 @@ class PagesController extends AppController {
 					'display' => array(
 						'title' => 'Afficher une page simple'
 					));
+	public $adminCapabilities = array(
+			'display' => 'Modifier une page',
+			'publish' => 'Publier les modifications d\'une page'
+		);
 
 	public function admin_display_delete($id=null) {
 		return $this->Page->delete($id);
 	}
-	public function admin_display($id=null) {
+	public function admin_display($id=null) {	
 
+		
+		if(empty($id))
+		{
+			if(!Admin::hasCapability('pages.create'))
+			{
+				return false;
+			}
+		}
+		$canPublish = Admin::hasCapability('pages.publish');
         if (!empty($this->request->data)) {
-        	if(empty($id))
+        	if(!empty($id))
+			{
+				$this->Page->id = $this->request->data['Page']['id'];
+				if($this->Page->field('parent_id') != $id)
+				{
+					return false;
+				}
+			}
+        	
+        	if(!$canPublish)
         	{
-        		if(empty($this->request->data['Page']))
-        		{
-        			return false;
-        		}
         		$this->request->data['Page']['author_id'] = $this->Auth->user('id');
+    			if($this->Page->savePending($this->request->data))
+    		 	{
+    		 		return $this->Page->field('parent_id');
+    		 	}
+    		 	return false;
         	}
-        	if($this->Page->save($this->request->data))
+        	if($this->Page->publish($this->request->data))
         	{
-        		return $this->Page->id;
+        		return $this->Page->field('parent_id');
         	}
         	return false;
         }
-
-		$this->layout = 'Admin.admin_panel';
-		$this->request->data = $this->Page->findById($id);
+        if($canPublish)
+        {
+        	$this->request->data = $this->Page->findLastVersion($id, null);
+        }
+        else
+        {
+        	$this->request->data = $this->Page->findLastVersion($id,$this->Auth->user('id'));
+        }		
 	}
 	public function display($id) {
-		$this->set($this->Page->findById($id));
+		$this->set($this->Page->findLastPublishedVersion($id));
 	}
 }

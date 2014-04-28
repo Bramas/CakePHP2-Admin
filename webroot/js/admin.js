@@ -189,5 +189,26 @@ jQuery(function($){
 			context:'li[admin-menu-click-id='+clickId+']'
 		});
 	})
+
+	$(window).on('scroll', function(d){
+		console.log();
+		if($(window).scrollTop() > 45)
+		{
+			$('.admin-panel-header').addClass('fixed');
+			if($('.admin-panel-header').length)
+			{
+				$('.main').addClass('admin-fixed-panel-header');
+			}
+		}
+		else
+		{
+			$('.admin-panel-header').removeClass('fixed');
+			if($('.admin-panel-header').length)
+			{
+				$('.main').removeClass('admin-fixed-panel-header');
+			}
+		}
+	});
+	
 });
 

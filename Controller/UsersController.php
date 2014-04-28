@@ -4,12 +4,12 @@ class UsersController extends AdminAppController {
 
 
     public function beforeFilter(){
-        $this->Auth->allow(array('login', 'logout'));
-        return parent::beforeFilter();
-    }
-
-    public function isAuthorized($user) {
-        return parent::isAuthorized($user);
+        parent::beforeFilter();
+        
+        if(empty($this->params['prefix']))
+        {
+            $this->Auth->allow();
+        }
     }
 
     public function admin_index() {
@@ -29,13 +29,29 @@ class UsersController extends AdminAppController {
     }
 
     public function admin_edit($id = null) {
+        $this->set('Roles', $this->User->Role->find('list'));
+
         if (!empty($this->request->data)) {
             $this->User->create();
             $this->User->set($this->request->data);
+            if(!empty($this->request->data['User']['new_password']) || 
+                !empty($this->request->data['User']['new_password_confirm']))
+            {
+                $pass1 = $this->request->data['User']['new_password'];
+                $pass2 = $this->request->data['User']['new_password_confirm'];
+                if($pass1 !== $pass2)
+                { 
+                    $this->Session->setFlash(__('Les mots de passe doivent être identiques'), 'Admin.flash_warning'); 
+                    return;
+                }
+                $this->request->data['User']['password'] = $pass1;
+                $this->User->set($this->request->data);
+            }
             if(!$this->request->data['User']['id'] && !$this->User->validates())
             {
                 $this->Session->setFlash(__('Le formulaire n\'a pas été correctement rempli'), 'Admin.flash_warning'); 
                 $this->set('errors', $this->User->validationErrors);
+                return;
             }
             else
             if ($this->User->save(null, false)) {
@@ -54,7 +70,6 @@ class UsersController extends AdminAppController {
             unset($this->request->data['User']['password']);
         }
         
-        $this->set('Roles', $this->User->Role->find('list'));
     }
 
     public function admin_delete($id = null) {
@@ -85,6 +100,9 @@ class UsersController extends AdminAppController {
 
     public function logout() {
         return $this->redirect($this->Auth->logout());
+    }
+    public function currentUser() {
+        return $this->Auth->user();
     }
 
 }

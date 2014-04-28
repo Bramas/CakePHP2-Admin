@@ -6,14 +6,12 @@ class AdminAppController extends AppController {
     public $components = array(
         'Session',
         'Auth' => array(
-            'authorize' => array('Controller'),
+            'authorize' => array('Admin.Admin', 'Controller'),
             'authenticate' => array(
-                'Basic' => array(
-                    'userModel' => 'Admin.User', 
-                    'passwordHasher' => 'Blowfish'),
                 'Form' => array(
                     'userModel' => 'Admin.User', 
-                    'passwordHasher' => 'Blowfish')
+                    'passwordHasher' => 'Blowfish',
+                    'recursive' => 2)
                 )
         )
     );
@@ -28,16 +26,11 @@ class AdminAppController extends AppController {
             $this->layout = 'admin';
         }
         parent::beforeFilter();
+        $this->set('User', $this->Auth->user());
     }
 
 
     public function isAuthorized($user) {
-        // Admin peut accéder à toute action
-        if (isset($user['role_id']) && $user['role_id'] == '1') {
-            return true;
-        }
-
-        // Refus par défaut
         return false;
     }
 

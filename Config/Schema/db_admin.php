@@ -63,15 +63,11 @@ class DbAdminSchema extends CakeSchema {
 		        'encoding' => 'utf8_general_ci'
 			    )
 		    );
-	public $capabilities = array(
+	public $user_capabilities = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
-		'role_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
-		'alias' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100),
-		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100),
-		'plugin' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 150),
-		'controller' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 150),
-		'action' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 250),
-		'args' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
+		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
+		'capability' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50),
+		'args' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 200),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
 		        'engine' => 'InnoDB',
@@ -81,10 +77,11 @@ class DbAdminSchema extends CakeSchema {
 			    )
 		    );
 			
-	public $capabilities_roles = array(
+	public $role_capabilities = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'role_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
-		'capability_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
+		'capability' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50),
+		'args' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 200),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
 		        'engine' => 'InnoDB',

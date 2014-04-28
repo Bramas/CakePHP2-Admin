@@ -13,16 +13,31 @@ echo $this->AdminForm->input('alias');
 echo $this->AdminForm->input('name');
 
 App::uses('Set', 'Utility');
-$capabilitiesSet = Set::extract('/id',$this->request->data['Capability']);
+
+if(empty($this->request->data['Capability'])){
+	$capabilitiesSet = array();
+} else {
+	$capabilitiesSet = Set::extract('/capability',$this->request->data['Capability']);
+}
 ?>
-<h4>Permissions du role</h4>
+
+<h3>Permissions du role</h3>
 <?php
 
-foreach($Capabilities as $cap_id => $cap)
+App::uses('Admin', 'Admin.Lib');
+$Capabilities = Admin::getAdminCapabilities();
+
+foreach($Capabilities as $controller => $caps)
 {
-	echo $this->AdminForm->checkbox('Capability..capability_id', array('value' => $cap_id, 'label' => $cap, 'checked' => in_array($cap_id, $capabilitiesSet)));
+	echo '<fieldset><legend>'.$controller.'</legend>';
+	foreach($caps as $alias => $name)
+	{
+		echo $this->AdminForm->checkbox('RoleCapability.'.strtolower($alias), array( 'label' => $name, 'checked' => in_array($alias, $capabilitiesSet)));
+	}
+	echo '</fieldset>';
 }
 ?>
 <hr>
 <?php
+debug($this->request->data);
 echo $this->AdminForm->end('Enregistrer');

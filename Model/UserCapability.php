@@ -1,7 +1,7 @@
 <?php
 
 App::uses('AppModel','Model');
-class Capability extends AppModel
+class UserCapability extends AppModel
 {
 	//public $hasAndBelongsToMany = array('Admin.Role');
 }

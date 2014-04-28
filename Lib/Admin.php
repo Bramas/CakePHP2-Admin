@@ -37,13 +37,32 @@ class Admin {
 
 
 
+    public static function getAdminCapabilities() {
+        return self::cache(__METHOD__, function() {
+            $map = array();
+            foreach (Admin::getControllersInfo() as $info) {
+                if(empty($info['adminCapabilities']))
+                {
+                    continue;
+                }
+                $map[$info['controller']] = array();
+                foreach($info['adminCapabilities'] as $cap => $name)
+                {
+                    $p = empty($info['plugin'])? '' : $info['plugin'].'.';
+                    $map[$info['controller']][$p.$info['controller'].'.'.$cap] = $name;
+                }
+                
+            }
+
+            return $map;
+        });
+    }
+
     public static function getViews() {
         return self::cache(__METHOD__, function() {
-            $controllers = App::objects('Controller');
             $map = array();
 
-            foreach ($controllers as $controller) {
-                $info = Admin::getControllerInfo('', $controller);
+            foreach (Admin::getControllersInfo() as $info) {
                 if(empty($info['adminViews']))
                 {
                     continue;
@@ -51,8 +70,8 @@ class Admin {
                 foreach($info['adminViews'] as $action => $config)
                 {
                     $map[] = array(
-                            'plugin' => '',
-                            'controller' => Admin::parseControllerClass($controller),
+                            'plugin' => $info['plugin'],
+                            'controller' => $info['controller'],
                             'view' => $action,
                             'label' => $config['title']
                         );
@@ -62,18 +81,94 @@ class Admin {
             return $map;
         });
     }
+    public static function getAdminMenu()
+    {
+        return self::cache(__METHOD__, function() {
+            $map = array();
+
+            foreach (Admin::getControllersInfo() as $info) {
+                if(empty($info['adminMenu']))
+                {
+                    continue;
+                }
+                foreach($info['adminMenu'] as $label => $url)
+                {
+                    $map[$label] = 
+                    array_merge($url ,
+                        array(
+                            'plugin' => $info['plugin'],
+                            'controller' => $info['controller']
+                        ));
+                }
+            }
+
+            return $map;
+        });
+    }
+
+    public static function getControllersInfo()
+    {
+        return self::cache(__METHOD__, function() {
+            $ret = array();
+
+            foreach(App::objects('Controller') as $controller)
+            {
+                $info = Admin::getControllerInfo('', $controller);
+                if($info)
+                {
+                    $ret[] = array_merge(array(
+                            'controller' => Admin::parseControllerClass($controller),
+                            'controllerClass' => $controller,
+                            'fullControllerClass' => $controller,
+                            'plugin'     => ''
+                        ), $info);
+                }
+            }
+
+            foreach(App::objects('plugins') as $plugin)
+            {
+                foreach(App::objects($plugin.'.Controller') as $controller)
+                {
+                    $info = Admin::getControllerInfo($plugin, $controller);
+                    if($info)
+                    {
+                        $ret[] = array_merge(array(
+                                'controller' => Admin::parseControllerClass($controller),
+                                'controllerClass' => $controller,
+                                'fullControllerClass' => $plugin.'.'.$controller,
+                                'plugin'     => $plugin
+                            ), $info);
+                    }
+                }
+            }
+            return $ret;
+        });
+    }
+
     public static function getControllerInfo($plugin, $controller) {
         Admin::importControllerClass($plugin, $controller);
         $controllerClass = Admin::getControllerClassName($controller);
         $Object = new $controllerClass;
-        $ret = array('adminMenu' => false, 'adminViews' => false);
+        $ret = array('adminMenu' => false, 'adminCapabilities' => false, 'adminViews' => false);
+        $empty = true;
         if(!empty($Object->adminViews))
         {
             $ret['adminViews'] = $Object->adminViews;
+            $empty = false;
         }
         if(!empty($Object->adminMenu))
         {
             $ret['adminMenu'] = $Object->adminMenu;
+            $empty = false;
+        }
+        if(!empty($Object->adminCapabilities))
+        {
+            $ret['adminCapabilities'] = $Object->adminCapabilities;
+            $empty = false;
+        }
+        if($empty)
+        {
+            return false;
         }
         return $ret;
     }
@@ -174,33 +269,57 @@ class Admin {
         return $ret;
     }
 
-
-    public static function getAdminMenu()
+    public static function arrayToCapability($array)
     {
-        return self::cache(__METHOD__, function() {
-            $controllers = App::objects('Controller');
-            $map = array();
-
-            foreach ($controllers as $controller) {
-                $info = Admin::getControllerInfo('', $controller);
-                if(empty($info['adminMenu']))
-                {
-                    continue;
-                }
-                foreach($info['adminMenu'] as $label => $url)
-                {
-                    $map[$label] = 
-                    array_merge($url ,
-                        array(
-                            'plugin' => '',
-                            'controller' => Admin::parseControllerClass($controller)
-                        ));
-                }
-            }
-
-            return $map;
-        });
+        $controller = $array['controller'];
+        $action     = $array['action'];
+        $plugin     = empty($array['plugin']) ? '' : $array['plugin'];
+        $prefix     = empty($array['prefix']) ? '' : $array['prefix'];
+        if(!empty($prefix))
+        {
+            $action = preg_replace('/^'.$prefix.'_/', '', $action);
+        }
+        return $plugin.'.'.$controller.'.'.$action;
     }
+
+    public static function hasCapability($user, $capability = null, $args = null)
+    {
+        if(!is_array($user))
+        {
+            $args = $capability;
+            $capability = $user;
+            $o = new Object();
+            $user = $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
+        }
+        if($user['Role']['alias'] == 'administrator')
+        {
+            return true;
+        }
+        if(is_array($capability))
+        {
+            $capability = Admin::arrayToCapability($capability);
+        }
+
+        $capability = strtolower($capability);
+        $capability = trim($capability, '.');
+        
+        if(empty($user))
+        {
+            return false;
+        }
+        /*App::uses('AuthComponent', 'Component');
+        $Auth = new AuthComponent(null);
+        exit(debug($Auth->user()));*/
+        App::uses('Set', 'Utility');
+
+        $capabilities = array_merge(
+            Set::extract('/capability', $user['Role']['Capability']),
+            Set::extract('/capability', $user['Capability'])
+        );
+        return in_array($capability, $capabilities);
+    }
+
+
 
     /**
      * Return a list of all models grouped by plugin.

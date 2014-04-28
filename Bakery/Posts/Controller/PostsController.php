@@ -1,11 +1,16 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('AdminAuthorize', 'Controller/Component/Auth');
 
 
 class PostsController extends AppController {
 
 	public $uses = array('Post');
+
+	public $components = array('Auth' => array(
+		'authorize' => array('Admin.Admin')
+		));
 
 	public $helpers = array('Admin.AdminForm');
 
@@ -15,11 +20,17 @@ class PostsController extends AppController {
 						'edit' => 'index_options'
 					));
 	public $adminMenu = array(
-			'Actualité' => array(
+			'Actualités' => array(
 				'action' => 'index'
 				)
 			);
-	public $components = array('Auth');
+	public $adminCapabilities = array(
+			'index' => 'Voir la liste des actualités',
+			'edit' => 'Modifier les actualités',
+			'publish' => 'Publier les nouvelles actualités et les modifications',
+			'create' => 'Créer une actualité',
+			'delete' => 'Supprimer les actualités'
+		);
 
 	public function beforeFilter()
 	{

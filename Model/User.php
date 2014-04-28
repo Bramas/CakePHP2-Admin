@@ -29,6 +29,16 @@ class User extends AppModel {
 
     public $belongsTo = array('Admin.Role');
 
+    public $hasMany = array(
+        'Capability' => array(
+            'className' => 'Admin.UserCapability',
+            'conditions' => array('args' => null)
+            ),
+        'AdditionnalCapability' => array(
+            'className' => 'Admin.UserCapability',
+            'conditions' => array('args IS NOT NULL')
+            ));
+
 
     public function beforeSave($options = array()) {
         if (isset($this->data[$this->alias]['password'])) {

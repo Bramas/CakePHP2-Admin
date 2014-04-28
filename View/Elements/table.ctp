@@ -1,6 +1,7 @@
 <?php
 	$columns;
 	$data;
+	App::uses('Admin', 'Admin.Lib');
 
 ?>
 <table class="table table-striped">
@@ -35,7 +36,35 @@
 					{
 						$url .= '/'.$d[$field];
 					}
-					echo $this->Html->link($d[$cName], $url);
+
+					if(!empty($actions[$c['action']]['require']))
+					{
+						$args = null;
+						if(is_array($actions[$c['action']]['require']))
+						{
+							$cap = $actions[$c['action']]['require'][0];
+							if(count($actions[$c['action']]['require']) > 1){
+								$args = $d[$actions[$c['action']]['require'][1]];
+							}
+							
+						}
+						else
+						{
+							$cap = $actions[$c['action']]['require'];
+						}
+						if(!Admin::hasCapability($cap, $args))
+						{
+							echo $d[$cName];
+						}
+						else
+						{
+							echo $this->Html->link($d[$cName], $url);
+						}
+					}
+					else
+					{
+						echo $this->Html->link($d[$cName], $url);
+					}
 				}
 				else
 				{
@@ -47,12 +76,37 @@
 		if(!empty($actions))
 		{
 			echo '<td class="admin-table-actions">';
+			$separator = '';
+			if(!empty($actions['separator']))
+			{
+				$separator = $actions['separator'];
+			}
+			$actionStrings = array();
 			foreach($actions as $id => $action)
 			{
 				if($id =='separator')
 				{
-					echo $action;
 					continue;
+				}
+				if(!empty($action['require']))
+				{
+					$args = null;
+					if(is_array($action['require']))
+					{
+						$cap = $action['require'][0];
+						if(count($action['require']) > 1){
+							$args = $d[$action['require'][1]];
+						}
+						
+					}
+					else
+					{
+						$cap = $action['require'];
+					}
+					if(!Admin::hasCapability($cap, $args))
+					{
+						continue;
+					}
 				}
 				$url = $action['url'];
 				$field = empty($action['field'])?'id':$action['field'];
@@ -68,8 +122,9 @@
 				{
 					$action['options']['data-toggle'] = "tooltip";
 				}
-				echo ' '.$this->Html->link(empty($action['label'])?'':$action['label'], $url, empty($action['options'])?array():$action['options']);
+				$actionStrings[] = ' '.$this->Html->link(empty($action['label'])?'':$action['label'], $url, empty($action['options'])?array():$action['options']);
 			}
+			echo implode($separator, $actionStrings);
 			echo '</td>';
 		}
 

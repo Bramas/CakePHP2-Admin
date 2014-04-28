@@ -4,6 +4,9 @@ App::uses('Admin', 'Admin.Lib');
 
 class AdminController extends AdminAppController {
 
+    public $adminCapabilities = array(
+            'index' => 'Se connecter à l\'administration',
+        );
 
     public function admin_index() {
 

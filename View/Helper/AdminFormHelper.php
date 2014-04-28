@@ -597,6 +597,12 @@ class AdminFormHelper extends FormHelper {
 		if ($this->_getFormType() == 'horizontal') {
 			$out .= '</div></div>';
 		}
+		if($this->_isAnAdminPanel())
+		{
+			echo $out;
+			$this->_View->end();
+			return '';
+		}
 
 		return $out;
 	}

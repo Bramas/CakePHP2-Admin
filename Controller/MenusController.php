@@ -15,6 +15,19 @@ class MenusController extends AdminAppController {
                         'title' => 'Contient d\'autres liens'
                     ));
 
+    public $adminCapabilities = array(
+            'create_menu' => 'Créer un menu',
+            'edit' => 'Modifier les menus',
+            'delete' => 'Supprimer les menus',
+            'list' => 'Voir les menus',
+        );
+
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit', 'edit'));
+    }
+
     public function admin_edit($id) {
         $menu = $this->Menu->findById($id);
         if(empty($menu['Menu']['controller']))
@@ -30,7 +43,7 @@ class MenusController extends AdminAppController {
         $this->request->data = $menu;
 
         $menu_item_content = '';
-        if($view['edit']['exists'])
+        if($view['edit']['exists'] && Admin::hasCapability($this->Auth->user(), $url))
         {
             $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
         }
@@ -135,15 +148,22 @@ class MenusController extends AdminAppController {
         }
     	if($args !== false)
     	{
-            if(empty($this->request->data['Menu']['slug']))
-            {
-                $this->request->data['Menu']['slug'] = $this->request->data['Menu']['title'];
-            }
-            App::uses('Inflector', 'Utility');
-            $this->request->data['Menu']['slug'] = Inflector::slug($this->request->data['Menu']['slug'], '-');
-            
         	$this->request->data['Menu']['args'] = $args;
-		    if($this->Menu->save($this->request->data))
+            $fields = array();
+            if(!Admin::hasCapability('admin.menu.edit'))
+            {
+                $fields = array('args');
+            }
+            else
+            {
+                if(empty($this->request->data['Menu']['slug']))
+                {
+                    $this->request->data['Menu']['slug'] = $this->request->data['Menu']['title'];
+                }
+                App::uses('Inflector', 'Utility');
+                $this->request->data['Menu']['slug'] = Inflector::slug($this->request->data['Menu']['slug'], '-');
+            }
+		    if($this->Menu->save($this->request->data, true, $fields))
 		    {
         		$this->Session->setFlash(__('Sauvegardé avec succés'), 'Admin.flash_success');
         	}
@@ -206,7 +226,7 @@ class MenusController extends AdminAppController {
 		$this->set('Views', $Views);
 	}
 
-    public function admin_all() {
+    public function admin_list() {
         //$d = array('Menu'=>array('parent'))
         return $this->Menu->find('threaded');
     }

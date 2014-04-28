@@ -18,13 +18,15 @@ $actions = array(
 	'edit' => array(
 		'label' => 'Editer',
 		'url' => array('action' => 'edit'),
-		'options' => array('class' => '')
+		'options' => array('class' => ''),
+		'require' => array('posts.edit', 'id')
 		),
 	'separator' => ' | ',
 	'delete' => array(
 		'label' => 'Corbeille',
 		'url' => array('action' => 'delete'),
-		'options' => array('class' => '')
+		'options' => array('class' => ''),
+		'require' => array('posts.delete', 'id')
 		),
 	);
 

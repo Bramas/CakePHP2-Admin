@@ -26,10 +26,14 @@ foreach($extensions as $name => $config)
 App::uses('Admin', 'Admin.Lib');
 
 $menu = Admin::getAdminMenu();
-
 ?>
 <ul data-admin-toggle="ajax" class="nav nav-sidebar">
-<?php foreach($menu as $title => $url): ?>
+<?php foreach($menu as $title => $url): 
+if(!Admin::hasCapability($url['plugin'].'.'.$url['controller'].'.'.(empty($url['require']) ? $url['action'] : $url['require'])))
+{
+    continue;
+}
+?>
 	<li<?php if($this->Html->url($url) == $this->request->here) echo ' class="active"';?>><?php echo $this->Html->link($title,$url); ?></li>
 <?php endforeach; ?>
 </ul>

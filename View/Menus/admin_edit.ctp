@@ -9,6 +9,11 @@ echo $this->element('Admin.panel_header', array(
 $disabled = !Admin::hasCapability('admin.menus.edit');
 
 echo $this->AdminForm->create('Menu', array('url' => array('action' => 'save')));
+if($menu_item_panel_header)
+{
+	echo $this->element('Admin.panel_header', $menu_item_panel_header);
+}
+
 echo $this->AdminForm->input('id', array('type' => 'hidden'));
 echo $this->AdminForm->input('title', array(
 	'type' => 'text', 
@@ -27,5 +32,7 @@ echo $this->AdminForm->input('title', array(
 <?php
 
 echo $menu_item_content;
+
+
 
 echo $this->AdminForm->end();

@@ -32,7 +32,7 @@ foreach($Capabilities as $controller => $caps)
 	echo '<fieldset><legend>'.$controller.'</legend>';
 	foreach($caps as $alias => $name)
 	{
-		echo $this->AdminForm->checkbox('RoleCapability.'.strtolower($alias), array( 'label' => $name, 'checked' => in_array($alias, $capabilitiesSet)));
+		echo $this->AdminForm->checkbox('RoleCapability.'.strtolower($alias), array( 'label' => $name, 'checked' => in_array(strtolower($alias), $capabilitiesSet)));
 	}
 	echo '</fieldset>';
 }

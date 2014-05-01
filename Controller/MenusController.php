@@ -42,12 +42,23 @@ class MenusController extends AdminAppController {
        	$this->set('id', $id);
         $this->request->data = $menu;
 
+        $menu_item_panel_header = false;
         $menu_item_content = '';
-        if($view['edit']['exists'] && Admin::hasCapability($this->Auth->user(), $url))
+        if(Admin::hasCapability($this->Auth->user(), $url))
         {
-            $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+            if($view['edit_panel_header']['exists'])
+            {
+                $Obj = Admin::getController($menu);
+                $method = $view['edit_panel_header']['method'];
+                $menu_item_panel_header = $Obj->$method($menu['Menu']['args']);
+            }
+            if($view['edit']['exists'] && Admin::hasCapability($this->Auth->user(), $url))
+            {
+                $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+            }
         }
         $this->set('menu_item_content', $menu_item_content);
+        $this->set('menu_item_panel_header', $menu_item_panel_header);
     }
 
     public function admin_move()

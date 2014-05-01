@@ -19,6 +19,7 @@
  */
 
 App::uses('AppController', 'Controller');
+App::uses('Admin', 'Admin.Lib');
 
 /**
  * Static content controller
@@ -53,9 +54,18 @@ class PagesController extends AppController {
 	public function admin_display_delete($id=null) {
 		return $this->Page->delete($id);
 	}
+	public function admin_display_panel_header($id=null) {	
+		if(empty($id))
+		{
+			return false;
+		}
+		$canPublish = Admin::hasCapability('pages.publish');
+		return array(
+			'title' => 'Page',
+			'submit' => ($canPublish ? __('Publier') : __('Soumettre à Publication'))
+			);
+	}
 	public function admin_display($id=null) {	
-
-		
 		if(empty($id))
 		{
 			if(!Admin::hasCapability('pages.create'))
@@ -72,6 +82,10 @@ class PagesController extends AppController {
 				{
 					return false;
 				}
+			}
+			else
+			{
+				$this->request->data['Page']['author_id'] = $this->Auth->user('id');
 			}
         	
         	if(!$canPublish)
@@ -96,7 +110,24 @@ class PagesController extends AppController {
         else
         {
         	$this->request->data = $this->Page->findLastVersion($id,$this->Auth->user('id'));
-        }		
+        }	
+        if(!empty($this->request->data['Page']))
+        {
+        	$this->set('Revisions', $this->Page->revisions($this->request->data['Page']['parent_id']))	;
+        } else {
+        	$this->set('Revisions', array())	;
+        }
+	}
+
+	public function admin_disapprove($id) {
+		if(!Admin::hasCapability('pages.publish'))
+		{
+			$this->redirect('/');
+			exit();
+		}
+		$this->Page->delete($id);
+		$this->redirect($this->referer());
+		exit();
 	}
 	public function display($id) {
 		$this->set($this->Page->findLastPublishedVersion($id));

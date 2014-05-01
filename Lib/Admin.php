@@ -193,6 +193,20 @@ class Admin {
         }
         App::uses($controllerClass, $plugin.'.Controller');
     }
+    public static function extractPluginAndController($array)
+    {
+        return array($array['Menu']['plugin'], $array['Menu']['controller']);
+    }
+    public static function getController($plugin, $controller = null)
+    {
+        if(is_array($plugin))
+        {
+            list($plugin, $controller) = Admin::extractPluginAndController($plugin);
+        }
+        Admin::importControllerClass($plugin, $controller);
+        $controllerClassName = ucfirst($controller).'Controller';
+        return new $controllerClassName();
+    }
 
     public static function getAdminView($plugin,$controller = null, $view = null, $args='')
     {
@@ -218,7 +232,11 @@ class Admin {
         $controllerClassName = $controller.'Controller';
         Admin::importControllerClass($plugin,$controller);
 
-        $ret = array();
+        $ret = array(
+            'controller' => $controller,
+            'controllerClassName' => $controllerClassName,
+            'controllerImportName' => (empty($plugin)?'':$plugin.'.').ucfirst($controller)
+            );
         $defaultUrl = array(
                 'controller' => $controller,
                 'action' => $view,
@@ -242,6 +260,10 @@ class Admin {
                 'method' => 'admin_'.$defaultUrl['action']
             );
         $ret['edit']['exists'] = method_exists($controllerClassName, $ret['edit']['method']);
+        $ret['edit_panel_header']=array(
+            'method' => $ret['edit']['method'].'_panel_header',
+            'exists' => method_exists($controllerClassName, $ret['edit']['method'].'_panel_header')
+            );
 
         if(!empty($info[$view]['save']))
         {

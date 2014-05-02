@@ -25,7 +25,10 @@ class MenusController extends AdminAppController {
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit', 'edit'));
+        if(Admin::hasCapability('admin.admin.index'))
+        {
+            $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit'));
+        }
     }
 
     public function admin_edit($id) {

@@ -25,8 +25,11 @@ function printNode($Html, $node, $here)
 	echo '</li>';
 }
 
+if(Admin::hasCapability('admin.menus.list'))
+{
+	$Menus = $this->requestAction(array('controller' => 'menus', 'action' => 'list' , 'plugin' => 'admin', 'admin' => true), array());
 
-$Menus = $this->requestAction(array('controller' => 'menus', 'action' => 'list' , 'plugin' => 'admin', 'admin' => true), array());
+
 
 
 ?>
@@ -232,3 +235,7 @@ jQuery(function ($) {
 
 });
 </script>
+<?php
+
+}
+

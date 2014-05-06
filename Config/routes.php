@@ -1,6 +1,5 @@
 <?php
 
-
 Router::connect(
 	'/admin/menus/:action',
 	array('controller' => 'menus', 'plugin'=>'admin', 'admin' => true)

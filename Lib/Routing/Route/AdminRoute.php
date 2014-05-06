@@ -3,6 +3,7 @@
 class AdminRoute extends CakeRoute {
  
     function parse($url) {
+        //return false;//exit(debug(parent::parse($url)));
         //explode('/', $url)
         $url = explode('/', $url);
         if(count($url) > 1)
@@ -36,6 +37,7 @@ class AdminRoute extends CakeRoute {
         
 	    if(empty($menu))
         {
+            return false;
             $params['controller']=$params['slug'];
             if(!empty($params['pass']) && count($params['pass']))
             {

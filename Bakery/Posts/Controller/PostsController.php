@@ -8,11 +8,13 @@ class PostsController extends AppController {
 
 	public $uses = array('Post');
 
-	public $components = array('Auth' => array(
-		'authorize' => array('Admin.Admin')
-		));
+	public $components = array(
+		'Auth' => array(
+			'authorize' => array('Admin.Admin')
+			)
+		);
 
-	public $helpers = array('Admin.AdminForm');
+	public $helpers = array('Admin.AdminForm','Upload.Upload');
 
 	public $adminViews = array(
 					'index' => array(
@@ -47,8 +49,7 @@ class PostsController extends AppController {
 
 	public function admin_edit($id = 0) {
 
-        if (!empty($this->request->data)) {
-
+        if ($this->request->is('post') || $this->request->is('put')) {
         	if(empty($id))
         	{
         		if(empty($this->request->data['Post']))

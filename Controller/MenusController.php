@@ -24,11 +24,17 @@ class MenusController extends AdminAppController {
 
     public function beforeFilter()
     {
+        $this->Security->blackHoleCallback = 'blackhole';
         parent::beforeFilter();
         if(Admin::hasCapability('admin.admin.index'))
         {
             $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit'));
         }
+    }
+
+    public function blackhole($type)
+    {
+        //exit(debug($type));
     }
 
     public function admin_edit($id) {
@@ -108,43 +114,60 @@ class MenusController extends AdminAppController {
 
     public function admin_delete($id) {
 
-    	$this->request->data = $this->Menu->findById($id);
-    	if(empty($this->request->data))
-    	{
-    		exit('{"error":true, "message":"menu item does not exists"}');
-    	}
+        $this->request->data = $this->Menu->findById($id);
+        if(empty($this->request->data))
+        {
+            exit('{"error":true, "message":"menu item does not exists"}');
+        }
 
-    	
+        
         $view = Admin::getAdminView($this->request->data);
         $url = $view['delete']['url'];
 
         if($view['delete']['exists'])
         {
-    		$ok = $this->requestAction($url);
-    	}
-    	else
-    	{
-    		$ok = true;
-    	}
-    	if($ok !== false)
-    	{
-		    if($this->Menu->delete($id))
-		    {
-				exit('{"success":1,"error":0}');
-        	}
-        	else
-        	{
-				exit('{"error":1, "message":"error while deleting menu item"}');
-        	}
+            $ok = $this->requestAction($url);
         }
         else
         {
-        	exit('{"error":1, "message":"error while deleting associated page"}');
+            $ok = true;
         }
-		exit('{"error":1, "message":"unknown error"}');
+        if($ok !== false)
+        {
+            if($this->Menu->delete($id))
+            {
+                exit('{"success":1,"error":0}');
+            }
+            else
+            {
+                exit('{"error":1, "message":"error while deleting menu item"}');
+            }
+        }
+        else
+        {
+            exit('{"error":1, "message":"error while deleting associated page"}');
+        }
+        exit('{"error":1, "message":"unknown error"}');
+    }
+    public function admin_setDefault($id) {
+
+        $this->Menu->id = $id;
+    	if(!$this->Menu->exists())
+    	{
+    		exit('{"error":true, "message":"menu item does not exists"}');  
+        }
+        if($this->Menu->updateAll(array(
+            'Menu.default' => 0), array(
+            'Menu.default' => 1)))
+        {
+            $this->Menu->id = $id;
+            $this->Menu->saveField('default', 1);
+            exit('{"success":1,"error":0}');
+        }
+        exit('{"error":1, "message":"unknown error"}');
     }
     public function admin_save() {
-    	if(empty($this->request->data))
+    	if(!$this->request->is('put'))
     	{
     		$this->redirect('/');
     		exit();

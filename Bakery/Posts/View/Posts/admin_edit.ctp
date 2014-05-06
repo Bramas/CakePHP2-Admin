@@ -12,5 +12,9 @@ echo $this->AdminForm->input('id', array('type'=>'hidden'));
 echo $this->AdminForm->input('title', array('type' => 'text'));
 echo $this->AdminForm->editor('content', array('label' => 'Contenu'));
 
+$this->Upload->setModel('Post');
+echo $this->Upload->input('featured_image', array('type' => 'file', 'label'=>'Image'));
+
+
 echo $this->AdminForm->submit('Enregistrer');
 echo $this->AdminForm->end();

@@ -4,6 +4,7 @@ App::uses('AppController', 'Controller');
 class AdminAppController extends AppController {
 
     public $components = array(
+        'Security',
         'Session',
         'Auth' => array(
             'authorize' => array('Admin.Admin', 'Controller'),

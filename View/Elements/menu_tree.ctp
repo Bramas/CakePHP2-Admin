@@ -12,8 +12,15 @@ function printNode($Html, $node, $here)
 		'plugin' => 'admin',
 		$menu['id']
 		);
-	$jstreeData = '{"selected":'.($Html->url($url) == $here? 'true' : 'false').'}';
-	echo '<li data-jstree=\''.$jstreeData.'\' '.
+	$class='';
+	$jstreeData = '{"selected":'.($Html->url($url) == $here? 'true' : 'false');
+	if($menu['default'])
+	{
+		$jstreeData .= ', "icon":"glyphicon glyphicon-home"';
+		$class='default';
+	}
+	$jstreeData .= '}';
+	echo '<li class="'.$class.'" data-jstree=\''.$jstreeData.'\' '.
 	'data-menu-url="'.$Html->url($url).'" '.
 	'data-menu-id="'.$menu['id'].'">'.$menu['title'];
 	echo '<ul>';
@@ -108,6 +115,20 @@ jQuery(function ($) {
 	                	separator_before: true,
 						label:"Renommer",
 						action:function(ev){ tree.edit(node); }
+					};
+				}
+				if(canEditNode)
+				{
+					ret.setDefault = {
+	                	separator_before: true,
+						label:"Définir comme page d'accueil",
+						action:function(ev){ 
+							var obj = tree.get_node($('#jstree .default').attr('id'));
+							tree.set_icon(obj, 'jstree-icon jstree-themeicon');
+							$('#jstree .default .jstree-themeicon-custom').removeClass('jstree-themeicon-custom')
+							$('#jstree .default').removeClass('default');
+							setDefault(tree, node); 
+						}
 					};
 				}
 				if(canDeleteNode)
@@ -223,6 +244,35 @@ jQuery(function ($) {
 				this.tree.delete_node(this.node);
 				adminLoadLayoutContent(AdminBaseUrl);
 
+			}
+		});
+	}
+	function setDefault(tree, node)
+	{
+		$('#jstree').addClass('loading');
+
+		var url = '<?php echo $this->Html->url(array('controller' => 'menus', 'action' => 'setDefault'), true); ?>';
+		$.ajax({
+			type 	: 'GET',
+			dataType: 'json',
+			url 	: url+'/'+node.data.menuId,
+			context:{tree:tree, node:node},
+			error: function(){
+
+				$('#jstree').removeClass('loading');
+				adminConnexionLost();
+			},
+			success: function(data)
+			{
+				$('#jstree').removeClass('loading');
+				if(data.error)
+				{
+					adminConnexionLost();
+					return;
+				}
+
+				$('#'+node.id).addClass('default');
+				tree.set_icon(node,'glyphicon glyphicon-home');
 			}
 		});
 	}

@@ -7,7 +7,7 @@ echo $this->AdminForm->input('parent_id', array('type' => 'hidden'));
 
 $currentRevision = '';
 $disapprovRevision = '';
-if(count($Revisions)){
+if(!empty($Revisions) && count($Revisions)){
 	$currentRevision = 'écrit par '.$Revisions[0]['User']['username'];
 	if($Revisions[0]['Page']['status'] == 'pending'){
 		$currentRevision .= ' - en attente de validation';

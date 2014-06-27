@@ -1,5 +1,6 @@
 <?php
 
+App::uses('AdminAppController', 'Admin.Controller');
 App::uses('Admin', 'Admin.Lib');
 
 class AdminController extends AdminAppController {

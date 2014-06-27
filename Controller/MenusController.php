@@ -267,5 +267,22 @@ class MenusController extends AdminAppController {
         //$d = array('Menu'=>array('parent'))
         return $this->Menu->find('threaded');
     }
+    public function getList($parent_id, $depth) {
+        //$d = array('Menu'=>array('parent'))
+        $Menus = $this->Menu->children($parent_id);
+        $MenuById = array();
+        $MenuById[$parent_id] = array('children' => array());
+
+        foreach($Menus as &$M)
+        {
+            $M['children'] = array();
+            $MenuById[$M['Menu']['id']] = &$M;
+        }
+        foreach($Menus as &$M)
+        {
+            $MenuById[$M['Menu']['parent_id']]['children'][] = &$M;
+        }
+        return $MenuById[$parent_id]['children'];
+    }
 
 }

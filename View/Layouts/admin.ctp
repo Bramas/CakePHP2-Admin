@@ -34,7 +34,6 @@
               <ul class="dropdown-menu">
                 <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
                 <li><?php echo $this->Html->link('Roles','/admin/roles'); ?></li>
-                <li><?php echo $this->Html->link('Permissions','/admin/capabilities'); ?></li>
                 <li><a href="#">Mon profil</a></li>
               </ul>
             </li>

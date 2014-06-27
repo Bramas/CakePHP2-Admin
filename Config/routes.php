@@ -1,16 +1,5 @@
 <?php
 
-Router::connect(
-	'/admin/menus/:action',
-	array('controller' => 'menus', 'plugin'=>'admin', 'admin' => true)
-);
-
-Router::connect(
-	'/admin/menus/:action/*',
-	array('controller' => 'menus', 'plugin'=>'admin', 'admin' => true)
-);
-
-
 
 Router::connect(
 	'/users/:action',
@@ -23,7 +12,8 @@ Router::connect(
 
 foreach(array(
 	'users',
-	'roles'
+	'roles',
+	'menus'
 	) as $controller)
 {
 	Router::connect(
@@ -38,6 +28,19 @@ foreach(array(
 	Router::connect(
 		'/admin/'.$controller.'/:action/*',
 		array('controller' => $controller, 'plugin'=>'admin', 'admin' => true)
+	);
+	Router::connect(
+		'/'.$controller,
+		array('controller' => $controller, 'action' => 'index', 'plugin'=>'admin', 'admin' => false)
+	);
+	Router::connect(
+		'/'.$controller.'/:action',
+		array('controller' => $controller, 'plugin'=>'admin', 'admin' => false)
+	);
+
+	Router::connect(
+		'/'.$controller.'/:action/*',
+		array('controller' => $controller, 'plugin'=>'admin', 'admin' => false)
 	);
 }
 

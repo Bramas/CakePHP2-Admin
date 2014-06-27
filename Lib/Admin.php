@@ -148,6 +148,10 @@ class Admin {
     public static function getControllerInfo($plugin, $controller) {
         Admin::importControllerClass($plugin, $controller);
         $controllerClass = Admin::getControllerClassName($controller);
+        if(!class_exists($controllerClass))
+        {
+        	return false;
+        }
         $Object = new $controllerClass;
         $ret = array('adminMenu' => false, 'adminCapabilities' => false, 'adminViews' => false);
         $empty = true;

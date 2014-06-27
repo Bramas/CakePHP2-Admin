@@ -616,8 +616,8 @@ class AdminFormHelper extends FormHelper {
  * @return string a closing FORM tag optional submit button.
  */
 
-	public function end($options = null){
-		$t = parent::end($options).$this->tinyMceScript();
+	public function end($options = null, $secureAttributes = Array()){
+		$t = parent::end($options, $secureAttributes).$this->tinyMceScript();
 
 		if(!$this->_isAnAdminPanel())
 		{

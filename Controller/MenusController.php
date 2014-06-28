@@ -26,6 +26,12 @@ class MenusController extends AdminAppController {
     {
         $this->Security->blackHoleCallback = 'blackhole';
         parent::beforeFilter();
+
+        if(empty($this->params['prefix']))
+        {
+            $this->Auth->allow();
+            return;
+        }
         if(Admin::hasCapability('admin.admin.index'))
         {
             $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit'));

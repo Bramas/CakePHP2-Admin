@@ -45,6 +45,10 @@ class PostsController extends AppController {
 			}
 		}
 		parent::beforeFilter();
+        if(empty($this->params['prefix']))
+        {
+            $this->Auth->allow();
+        }
 	}
 
 	public function admin_edit($id = 0) {

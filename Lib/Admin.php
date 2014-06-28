@@ -308,6 +308,19 @@ class Admin {
         return $plugin.'.'.$controller.'.'.$action;
     }
 
+    public static function isAdministrator($user = null)
+    {
+		if(!is_array($user))
+        {
+            $o = new Object();
+            $user = $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
+        }
+        if($user['Role']['alias'] == 'administrator')
+        {
+            return true;
+        }
+        return false;
+    }
     public static function hasCapability($user, $capability = null, $args = null)
     {
         if(!is_array($user))

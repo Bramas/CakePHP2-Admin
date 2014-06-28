@@ -26,18 +26,32 @@ if(empty($this->request->data['Capability'])){
 
 App::uses('Admin', 'Admin.Lib');
 $Capabilities = Admin::getAdminCapabilities();
+$disabled = false;
+if($this->request->data['Role']['alias'] == 'administrator')
+{
+	$disabled = true;
+	$capabilitiesSet = array();
+	foreach($Capabilities as $c)
+	{
+		foreach($c as $key => $n)
+		{
+			$capabilitiesSet[] = strtolower($key);
+		}
+	}
+}
+
 
 foreach($Capabilities as $controller => $caps)
 {
 	echo '<fieldset><legend>'.$controller.'</legend>';
 	foreach($caps as $alias => $name)
 	{
-		echo $this->AdminForm->checkbox('RoleCapability.'.strtolower($alias), array( 'label' => $name, 'checked' => in_array(strtolower($alias), $capabilitiesSet)));
+		echo $this->AdminForm->checkbox('RoleCapability.'.strtolower($alias), array( 'label' => $name, 'disabled' => $disabled,  'checked' => in_array(strtolower($alias), $capabilitiesSet)));
 	}
 	echo '</fieldset>';
 }
 ?>
 <hr>
 <?php
-debug($this->request->data);
+
 echo $this->AdminForm->end('Enregistrer');

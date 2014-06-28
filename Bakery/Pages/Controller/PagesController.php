@@ -50,7 +50,14 @@ class PagesController extends AppController {
 			'display' => 'Modifier une page',
 			'publish' => 'Publier les modifications d\'une page'
 		);
-
+    public function beforeFilter(){
+        parent::beforeFilter();
+        
+        if(empty($this->params['prefix']))
+        {
+            $this->Auth->allow();
+        }
+    }
 	public function admin_display_delete($id=null) {
 		return $this->Page->delete($id);
 	}

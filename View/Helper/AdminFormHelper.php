@@ -152,6 +152,49 @@ class AdminFormHelper extends FormHelper {
 			return $t;
 		}
 	}
+	public function date($fieldName, $options = array()){
+
+		//----- [before], [state] and [after] options
+		if (!isset($options['before'])) {
+			if (isset($options['state'])) {
+				switch ($options['state']) {
+					case 'error':
+						$state = ' has-error';
+						break;
+					case 'warning':
+						$state = ' has-warning';
+						break;
+					case 'success':
+						$state = ' has-success';
+						break;
+					
+					default:
+						$state = '';
+						break;
+				}
+				$options['before'] = '<div class="form-group'.$state.'">';
+			}else{
+				$options['before'] = '<div class="form-group">'; 
+			}	
+			if (!isset($options['after'])) {
+				$options['after'] = '</div>';
+			}
+		}
+
+		//----- [div] option
+		if (!isset($options['div'])) {
+			$options['div'] = false;
+		}
+
+		//----- [class] option
+		if (isset($options['class'])) {
+			$options['class'] .= ' form-control';
+		}else{
+			$options['class'] = 'form-control';
+		}
+		return $options['before'].parent::date($fieldName, $options).$options['after'].SP;
+
+	}
 
 
 /**

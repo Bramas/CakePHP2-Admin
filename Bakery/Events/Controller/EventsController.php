@@ -18,7 +18,7 @@ class EventsController extends AppController {
 
 	public $adminViews = array(
 					'index' => array(
-						'title' => 'Afficher la liste des actualité',
+						'title' => 'Afficher la liste des événements',
 						'edit' => 'index_options'
 					));
 	public $adminMenu = array(
@@ -108,7 +108,7 @@ class EventsController extends AppController {
 	}
 	public function index($options) {
 		list($count, $type) = explode('-',$options);
-		$this->set('Events', $this->Post->find('all',array(
+		$this->set('Events', $this->Event->find('all',array(
 			'limit' => $count)));
 		$this->set('type', $type);
 	}

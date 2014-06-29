@@ -17,27 +17,29 @@ if(!isset($class))
 }
 $Menus = $this->requestAction('/menus/getList/'.$parent_id.'/'.$depth);
 
+if(!function_exists('renderTree'))
+{
+	function renderTree(&$View, $tree, $depth, $id = null, $class = 'menu') {
 
-function renderTree(&$View, $tree, $depth, $id = null, $class = 'nav') {
-
-	if ($depth < 0) {
-		return;
-	}
-	$result = '<ul class="'.$class.'" id="'.$id.'">';
-
-	foreach($tree as $node)
-	{
-		$url = $View->Html->url('/'.$node['Menu']['slug']);
-		$linkclass = (strtolower($View->request->here) == strtolower($url) ? 'active' : '');
-		$options = array('class' => $linkclass);
-		$result .= '<li>' . $View->Html->link($node['Menu']['title'], '/'.$node['Menu']['slug'], $options);
-		if (!empty($node['children'])) {
-			$result .=  renderTree($View, $node['children'], $depth - 1, '', 'nav-submenu');
+		if ($depth < 0) {
+			return;
 		}
-		$result .= '</li>';
-	}
+		$result = '<ul class="'.$class.'" id="'.$id.'">';
 
-  return $result."</ul>";
+		foreach($tree as $node)
+		{
+			$url = $View->Html->url('/'.$node['Menu']['slug']);
+			$linkclass = (strtolower($View->request->here) == strtolower($url) ? 'active' : '');
+			$options = array('class' => $linkclass);
+			$result .= '<li>' . $View->Html->link($node['Menu']['title'], '/'.$node['Menu']['slug'], $options);
+			if (!empty($node['children'])) {
+				$result .=  renderTree($View, $node['children'], $depth - 1, '', 'submenu');
+			}
+			$result .= '</li>';
+		}
+
+	  return $result."</ul>";
+	}
 }
 echo renderTree($this, $Menus, 1, $id, $class);
 

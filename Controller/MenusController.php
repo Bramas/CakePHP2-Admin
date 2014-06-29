@@ -29,6 +29,7 @@ class MenusController extends AdminAppController {
 
         if(empty($this->params['prefix']))
         {
+            $this->layout = 'default';
             $this->Auth->allow();
             return;
         }
@@ -232,8 +233,8 @@ class MenusController extends AdminAppController {
 	}
     public function root_menu($id = null)
     {
-        $menu = $this->Menu->children(Configure::read('Admin.Menu.id'));
-        exit(debug($menu));
+        $menus = $this->Menu->children(Configure::read('Admin.Menu.id'), true);
+        $this->set('menus', $menus);
     }
 
 	public function admin_create_menu($parent_id)

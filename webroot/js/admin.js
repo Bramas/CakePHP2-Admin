@@ -212,7 +212,6 @@ jQuery(document).on('submit', '#dialog-reconnect form', function(e){
 
 jQuery(function($){
 	adminPanelLoaded();
-	$('.main').append(' <a class="link-modal-reconnect" href="#">se reconnecter</a>');
 	history.replaceState({url:window.location.href})
 
 

@@ -31,6 +31,12 @@ echo $this->AdminForm->input('title', array(
 </div>
 <?php
 
+
+echo $this->AdminForm->input('params', array(
+'type' => (Admin::isAdministrator()?'text':'hidden'), 
+'label' => 'Paramètre'));
+
+
 echo $menu_item_content;
 
 

@@ -1,5 +1,6 @@
 
 
+var failedState = false;
 var adminConnected = true;
 function adminInitTinyMce()
 {
@@ -83,6 +84,7 @@ function adminConnexionLost()
 {
 	adminConnected = false;
 	$('#admin-connexion-status').html("La connexion à été perdu.").show('fast');
+	$('#admin-connexion-status').append(' <a class="link-modal-reconnect" href="#">se reconnecter</a>');
 }
 function adminConnexionWin()
 {
@@ -131,6 +133,7 @@ function adminLoadLayoutContent(state)
 		error: function(){
 			adminSetAjaxPageProgress(1);
 			adminConnexionLost();
+			failedState = state;
 		},
 		success:function(data)
 		{
@@ -138,7 +141,8 @@ function adminLoadLayoutContent(state)
 			{
 				history.pushState(this, this.title, this.url);
 			}
-			adminSetLayoutContent(data)
+			adminSetLayoutContent(data);
+			failedState = false;
 		}
 	});
 }
@@ -167,8 +171,48 @@ function adminPanelLoaded()
 	$('a[data-toggle=tooltip]').tooltip();
 }
 
+jQuery(document).on('click', '.link-modal-reconnect',  function(){
+	console.log('ok');
+	jQuery('#dialog-reconnect').modal();
+})
+jQuery(document).on('submit', '#dialog-reconnect form', function(e){
+	e.preventDefault();
+	var data = {};
+	jQuery('#dialog-reconnect form input').each(function(){
+		if($(this).attr('name'))
+		{
+			data[$(this).attr('name')] = $(this).val();
+		} 
+	});
+	$.ajax({
+		url: BaseUrl+"users/login?ajax=1",
+		type:'POST',
+		data:jQuery('#dialog-reconnect form').serialize(),
+		dataType:"json",
+		error: function(){
+			adminSetAjaxPageProgress(1);
+			jQuery('#dialog-reconnect .error').html('Erreur');
+		},
+		success:function(data)
+		{
+			if(!data.success)
+			{
+				jQuery('#dialog-reconnect .error').html(data.message);
+				return;
+			}
+			jQuery('#dialog-reconnect').modal('hide');
+			if(failedState)
+			{
+				adminConnexionWin();
+				adminLoadLayoutContent(failedState)
+			}
+		}
+	});
+});
+
 jQuery(function($){
 	adminPanelLoaded();
+	$('.main').append(' <a class="link-modal-reconnect" href="#">se reconnecter</a>');
 	history.replaceState({url:window.location.href})
 
 

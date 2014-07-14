@@ -5,7 +5,7 @@ class UsersController extends AdminAppController {
 
     public function beforeFilter(){
         parent::beforeFilter();
-        
+        $this->Security->unlockedActions = array('login');
         if(empty($this->params['prefix']))
         {
             $this->Auth->allow();
@@ -89,8 +89,16 @@ class UsersController extends AdminAppController {
     public function login() {
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
+                if($this->request->is('ajax'))
+                {
+                    exit('{"success":1}');
+                }
                 return $this->redirect($this->Auth->redirect());
             } else {
+                if($this->request->is('ajax'))
+                {
+                    exit('{"success":0, "message":"'.__("Nom d'utilisateur ou mot de passe invalide, réessayer").'"}');
+                }
                 debug($this->request->data);
                 $this->Session->setFlash(__("Nom d'utilisateur ou mot de passe invalide, réessayer"), 'Admin.flash_warnin');
             }

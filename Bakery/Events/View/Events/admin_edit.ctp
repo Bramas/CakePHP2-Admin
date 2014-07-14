@@ -1,7 +1,7 @@
 <?php 
 
 echo $this->element('Admin.panel_header', array(
-	'title'=>'Editer une actualité' , 
+	'title'=>'Editer un événement' , 
 	'backUrl' => array('action' => 'index')
 		));
 

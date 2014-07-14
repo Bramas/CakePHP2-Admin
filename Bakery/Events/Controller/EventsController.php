@@ -54,6 +54,24 @@ class EventsController extends AppController {
 	public function admin_edit($id = 0) {
 
         if ($this->request->is('post') || $this->request->is('put')) {
+        	/*if(false !== strpos('/', $this->request->data['Event']['begin']))
+        	{
+        		list($j,$m,$a) = explode('/',$this->request->data['Event']['begin']);
+				$this->request->data['Event']['begin'] = $a.'-'.$m.'-'.$j.' 00:00:00';
+        	}
+        	else
+        	{
+        		$this->request->data['Event']['begin'] = false;
+        	}
+        	if(false !== strpos('/', $this->request->data['Event']['end']))
+        	{
+        		list($j,$m,$a) = explode('/',$this->request->data['Event']['end']);
+				$this->request->data['Event']['end'] = $a.'-'.$m.'-'.$j.' 00:00:00';
+        	}
+        	else
+        	{
+        		$this->request->data['Event']['end'] = false;
+        	}*/
         	if(empty($id))
         	{
         		if(empty($this->request->data['Event']))

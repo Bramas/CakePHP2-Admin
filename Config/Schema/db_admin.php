@@ -20,6 +20,7 @@ class DbAdminSchema extends CakeSchema {
 		'ip_address' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
+		'params' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 	    'tableParameters' => array(
 	        'engine' => 'InnoDB',

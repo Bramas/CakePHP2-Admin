@@ -21,6 +21,7 @@ class DbAdminSchema extends CakeSchema {
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'params' => array('type' => 'text', 'null' => false, 'default' => ''),
+		'custom_fields' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 	    'tableParameters' => array(
 	        'engine' => 'InnoDB',

@@ -51,7 +51,7 @@ class MenusController extends AdminAppController {
 			$this->redirect(array('action' => 'create_page', $id));
 			exit();
         }
-
+        $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
         
         $view = Admin::getAdminView($menu);
         $url = $view['edit']['url'];
@@ -206,6 +206,10 @@ class MenusController extends AdminAppController {
                 }
                 App::uses('Inflector', 'Utility');
                 $this->request->data['Menu']['slug'] = Inflector::slug($this->request->data['Menu']['slug'], '-');
+            }
+            if(!empty($this->request->data['Menu']['custom_fields']))
+            {
+                $this->request->data['Menu']['custom_fields'] = json_encode($this->request->data['Menu']['custom_fields']);
             }
 		    if($this->Menu->save($this->request->data, true, $fields))
 		    {

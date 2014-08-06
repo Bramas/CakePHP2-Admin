@@ -226,14 +226,17 @@ class MenusController extends AdminAppController {
 	public function admin_root_menu($id=null) {
         if(!empty($this->request->data))
         {
-            return json_encode($this->request->data['RootMenuOptions']);
+            return base64_encode(json_encode($this->request->data['RootMenuOptions']));
+            //return implode(';', $this->request->data['RootMenuOptions']);
         }
-        $this->request->data['RootMenuOptions'] = explode('-', $id);
+        $this->request->data['RootMenuOptions'] = json_decode(base64_decode($id), true);
+        //list($redirectTo) = explode(';',$id);
+        //$this->request->data['RootMenuOptions'] = array('redirectTo' => $redirectTo);
 		$this->layout = 'Admin.admin_panel';
 	}
     public function root_menu($id = null)
     {
-        $menuOptions = json_decode($id, true);
+        $menuOptions = json_decode(base64_decode($id), true);
         if(!empty($menuOptions['redirectTo']))
         {
             $this->redirect($menuOptions['redirectTo']);

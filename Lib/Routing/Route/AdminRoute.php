@@ -58,7 +58,7 @@ class AdminRoute extends CakeRoute {
             }
             throw new NotFoundException(__('Page introuvable'));
         }
-
+        $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
         Configure::write('Admin.Menu',$menu['Menu']);
         $params['controller'] =  $view['frontend']['url']['controller'];
         $params['action'] =  $view['frontend']['url']['action'];

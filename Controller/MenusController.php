@@ -287,6 +287,9 @@ class MenusController extends AdminAppController {
         //$d = array('Menu'=>array('parent'))
         return $this->Menu->find('threaded');
     }
+    public function getGeneratedTreeList() {
+        return $this->Menu->generateTreeList(null, '{n}.Menu.slug', '{n}.Menu.title', '_');
+    }
     public function getList($parent_id, $depth) {
         //$d = array('Menu'=>array('parent'))
         $Menus = $this->Menu->children($parent_id);

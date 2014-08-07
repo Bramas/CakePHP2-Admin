@@ -36,6 +36,7 @@ class SearchController extends AdminAppController {
 			$r = $C->$adminSearch($terms);
 			$results = array_merge((array)$results, (array)$r);
 		}
+		$results = Set::sort($results, '{n}.score', 'desc');
 		$this->set('results', $results);
 	}
 }

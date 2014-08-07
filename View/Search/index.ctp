@@ -21,7 +21,7 @@ if(empty($url['plugin']))
 }
 ?>
 <div class="results-item">
-	<?php echo $this->Html->link($result['title'],$url); ?>
+	<?php echo $this->Html->link($result['title'],$url); echo $result['score']; ?>
 </div>
 <?php
 endforeach;

@@ -36,7 +36,7 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array('Page');
+	public $uses = array('Page' , 'Admin.Menu');
 
 	public $components = array('Auth');
 
@@ -148,7 +148,7 @@ class PagesController extends AppController {
 		    'SELECT Menu.slug, Page.id, Page.content, Menu.title, MATCH (Menu.title, Page.content) '.
 		    'AGAINST (:terms IN BOOLEAN MODE) as Score '.
 			'FROM '.$this->Page->tablePrefix.'pages as Page '.
-			'INNER JOIN menus as Menu ON (Menu.controller = "pages" AND Menu.args = Page.id) '.
+			'INNER JOIN '.$this->Menu->tablePrefix.'menus as Menu ON (Menu.controller = "pages" AND Menu.args = Page.id) '.
 			'HAVING Score > 0.2 ORDER BY Score DESC',
 		    array('terms' => $terms)
 		);

@@ -159,7 +159,7 @@ class PagesController extends AppController {
 				'url' => array(
 					'controller' => 'pages',
 					'action' => 'view',
-					$res['Menu']['slug']
+					'slug'=>$res['Menu']['slug']
 					),
 				'title' => $res['Menu']['title'],
 				'score' => $res[0]['Score']

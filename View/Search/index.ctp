@@ -9,9 +9,19 @@ else
 
 
 foreach($results as $result):
+
+	$url = $result['url'];
+if(empty($url['admin']))
+{
+	$url['admin'] = false;
+}
+if(empty($url['plugin']))
+{
+	$url['plugin'] = false;
+}
 ?>
 <div class="results-item">
-	<?php echo $this->Html->link($result['title'],$result['url']); ?>
+	<?php echo $this->Html->link($result['title'],$url); ?>
 </div>
 <?php
 endforeach;

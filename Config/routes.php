@@ -13,7 +13,8 @@ Router::connect(
 foreach(array(
 	'users',
 	'roles',
-	'menus'
+	'menus',
+	'search'
 	) as $controller)
 {
 	Router::connect(

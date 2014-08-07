@@ -170,6 +170,14 @@ class Admin {
             $ret['adminCapabilities'] = $Object->adminCapabilities;
             $empty = false;
         }
+        if(!empty($Object->adminSearch))
+        {
+            if(method_exists($controllerClass, $Object->adminSearch))
+            {
+                $ret['adminSearch'] = $Object->adminSearch;
+                $empty = false;
+            }
+        }
         if($empty)
         {
             return false;

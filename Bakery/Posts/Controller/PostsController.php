@@ -33,6 +33,7 @@ class PostsController extends AppController {
 			'create' => 'Créer une actualité',
 			'delete' => 'Supprimer les actualités'
 		);
+	public $adminSearch = 'search';
 
 	public function beforeFilter()
 	{
@@ -111,5 +112,30 @@ class PostsController extends AppController {
 		$this->set('Posts', $this->Post->find('all',array(
 			'limit' => $count)));
 		$this->set('type', $type);
+	}
+	public function search($terms)
+	{
+		$db = $this->Post->getDataSource();
+		$results = $db->fetchAll(
+		    'SELECT Post.id, Post.content, Post.title, MATCH (title, content) '.
+		    'AGAINST (:terms IN BOOLEAN MODE) as Score '.
+			'FROM '.$this->Post->tablePrefix.'posts as Post '.
+			'HAVING Score > 0.2 ORDER BY Score DESC',
+		    array('terms' => $terms)
+		);
+		$ret = array();
+		foreach($results as $res)
+		{
+			$ret[] = array(
+				'url' => array(
+					'controller' => 'posts',
+					'action' => 'view',
+					$res['Post']['id'].'-'.Inflector::slug($res['Post']['title'], '-')
+					),
+				'title' => $res['Post']['title'],
+				'score' => $res[0]['Score']
+				);
+		}
+		return $ret;
 	}
 }

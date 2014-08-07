@@ -50,6 +50,7 @@ class PagesController extends AppController {
 			'display' => 'Modifier une page',
 			'publish' => 'Publier les modifications d\'une page'
 		);
+	public $adminSearch = 'search';
     public function beforeFilter(){
         parent::beforeFilter();
         
@@ -138,5 +139,32 @@ class PagesController extends AppController {
 	}
 	public function display($id) {
 		$this->set($this->Page->findLastPublishedVersion($id));
+	}
+
+	public function search($terms)
+	{
+		$db = $this->Page->getDataSource();
+		$results = $db->fetchAll(
+		    'SELECT Menu.slug, Page.id, Page.content, Menu.title, MATCH (Menu.title, Page.content) '.
+		    'AGAINST (:terms IN BOOLEAN MODE) as Score '.
+			'FROM '.$this->Page->tablePrefix.'pages as Page '.
+			'INNER JOIN menus as Menu ON (Menu.controller = "pages" AND Menu.args = Page.id) '.
+			'HAVING Score > 0.2 ORDER BY Score DESC',
+		    array('terms' => $terms)
+		);
+		$ret = array();
+		foreach($results as $res)
+		{
+			$ret[] = array(
+				'url' => array(
+					'controller' => 'pages',
+					'action' => 'view',
+					$res['Menu']['slug']
+					),
+				'title' => $res['Menu']['title'],
+				'score' => $res[0]['Score']
+				);
+		}
+		return $ret;
 	}
 }

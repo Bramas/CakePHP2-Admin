@@ -42,7 +42,12 @@ if(Admin::hasCapability('admin.menus.list'))
 ?>
 <div id="jstree">
 	<ul>
-	<?php printNode($this->Html, $Menus[0], $here); ?>
+	<?php 
+	foreach($Menus as $Menu)
+	{
+		printNode($this->Html, $Menu, $here); 
+	}
+	?>
 	</ul>
 </div>
 

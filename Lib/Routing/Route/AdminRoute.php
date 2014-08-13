@@ -34,6 +34,7 @@ class AdminRoute extends CakeRoute {
         {
             $menu = $Menu->findBySlug($params['slug']);
         }
+
         
 	    if(empty($menu))
         {
@@ -58,8 +59,18 @@ class AdminRoute extends CakeRoute {
             }
             throw new NotFoundException(__('Page introuvable'));
         }
+
         $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
+        $menu['Menu']['params'] = json_decode($menu['Menu']['params'], true);
         Configure::write('Admin.Menu',$menu['Menu']);
+        $menuPath = $Menu->getPath($menu['Menu']['id']);
+        foreach($menuPath as &$menuPathItem)
+        {
+            $menuPathItem['Menu']['custom_fields'] = json_decode($menuPathItem['Menu']['custom_fields'], true);
+            $menuPathItem['Menu']['params'] = json_decode($menuPathItem['Menu']['params'], true);
+        }
+        Configure::write('Admin.MenuPath',$menuPath);
+
         $params['controller'] =  $view['frontend']['url']['controller'];
         $params['action'] =  $view['frontend']['url']['action'];
         $params['plugin'] =  $view['frontend']['url']['plugin'];

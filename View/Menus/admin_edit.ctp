@@ -41,9 +41,18 @@ echo $this->AdminForm->input('params', array(
 $params = json_decode($this->request->data['Menu']['params'], true);
 if(!empty($params['custom_fields']) && is_array($params['custom_fields']))
 {
-	foreach($params['custom_fields'] as $custom_field)
+	foreach($params['custom_fields'] as $name => $type)
 	{
-		echo $this->element('custom_fields/'.$custom_field, array('name' => $custom_field));
+/*
+		if(is_array($custom_field))
+		{
+			$type = empty($custom_field['type'])?'text':$custom_field['type'];
+		}
+		else
+		{
+			$type = $name = $custom_field;
+		}*/
+		echo $this->element('custom_fields/'.$type, array('name' => $name));
 	}
 }
 

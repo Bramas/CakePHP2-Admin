@@ -52,7 +52,12 @@ if(!empty($params['custom_fields']) && is_array($params['custom_fields']))
 		{
 			$type = $name = $custom_field;
 		}*/
-		echo $this->element('custom_fields/'.$type, array('name' => $name));
+		if(!is_array($type))
+		{
+			$type = array('type' => $type);
+		}
+		$type = array_merge(array('type' => $type['type'], 'label' => $type['type']), $type);
+		echo $this->element('custom_fields/'.$type['type'], array('name' => $name, 'label'=>$type['label']));
 	}
 }
 

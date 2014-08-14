@@ -6,7 +6,7 @@ App::uses('AdminAppController', 'Admin.Controller');
 class MenusController extends AdminAppController {
 
 
-	var $helpers = array('Admin.AdminForm');
+	var $helpers = array('Admin.AdminForm', 'Media.Media');
     var $uses = array('Admin.Menu');
 
 

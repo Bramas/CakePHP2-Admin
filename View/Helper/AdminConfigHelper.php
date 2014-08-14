@@ -100,18 +100,6 @@ class AdminConfigHelper extends AppHelper {
 		ob_start();
 
 		$list = $this->requestAction('menus/getGeneratedTreeList');
-		if(empty($list))
-		{
-			$list = array(''=>'');
-		}else
-		{
-			$ar = array();
-			foreach($list as $e => $v)
-			{
-				$ar['/'.$e] = $v;
-			}
-			$list = $ar;
-		}
 		$options['options'] = $list;
 		echo $this->AdminForm->input($name, $options);
 

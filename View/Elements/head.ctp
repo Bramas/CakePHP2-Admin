@@ -33,5 +33,9 @@ echo $this->Html->css('Admin.dashboard.css');
 <script type="text/javascript">
 	var AdminBaseUrl = '<?php echo $this->Html->url('/admin/'); ?>';
 	var BaseUrl = '<?php echo $this->Html->url('/'); ?>';
+	if(BaseUrl == '/')
+	{
+		BaseUrl = '';
+	}
 	var AdminFirstUrl = '<?php echo $this->request->here; ?>';
 </script>

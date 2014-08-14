@@ -9,12 +9,13 @@ class PostsController extends AppController {
 	public $uses = array('Post');
 
 	public $components = array(
+		'Security',
 		'Auth' => array(
 			'authorize' => array('Admin.Admin')
 			)
 		);
 
-	public $helpers = array('Admin.AdminForm','Upload.Upload');
+	public $helpers = array('Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
 
 	public $adminViews = array(
 					'index' => array(

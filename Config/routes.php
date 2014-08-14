@@ -14,7 +14,8 @@ foreach(array(
 	'users',
 	'roles',
 	'menus',
-	'search'
+	'search',
+	'config'
 	) as $controller)
 {
 	Router::connect(

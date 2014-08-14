@@ -1,13 +1,12 @@
 <?php
 
-
-
 echo $this->element('Admin.panel_header', array(
 	'title'=>'Agenda' , 
 	'addNew' => array(
 		'label' => 'Nouvel Evènement',
 		'url' => array('action' => 'edit')
-		)));
+		),
+	'after' => $this->AdminConfig->modalButton('events','btn btn-default btn-sm')));
 
 
 $columns = array(
@@ -30,4 +29,7 @@ $actions = array(
 		),
 	);
 
+echo $this->AdminConfig->group('events');
+echo $this->AdminConfig->input('parent_menu', array('type'=>'menu', 'label'=>'Menu parent'));
+echo $this->AdminConfig->end();
 echo $this->element('Admin.table', array('actions'=>$actions , 'columns' => $columns, 'data' => $Events, 'model' => 'Event'));

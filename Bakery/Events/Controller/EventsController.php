@@ -6,15 +6,16 @@ App::uses('AdminAuthorize', 'Controller/Component/Auth');
 
 class EventsController extends AppController {
 
-	public $uses = array('Event');
+	public $uses = array('Event', 'Admin.Config');
 
 	public $components = array(
+		'Security',
 		'Auth' => array(
 			'authorize' => array('Admin.Admin')
 			)
 		);
 
-	public $helpers = array('Admin.AdminForm','Upload.Upload');
+	public $helpers = array('Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
 
 	public $adminViews = array(
 					'index' => array(

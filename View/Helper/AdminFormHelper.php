@@ -153,7 +153,11 @@ class AdminFormHelper extends FormHelper {
 		}
 	}
 	public function date($fieldName, $options = array()){
-
+		if(!empty( $options['default']))
+		{
+			unset($options['default']);
+			return parent::date($fieldName, $options);
+		}
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
 			if (isset($options['state'])) {

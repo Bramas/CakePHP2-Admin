@@ -10,8 +10,8 @@ echo $this->AdminForm->create('Event');
 
 echo $this->AdminForm->input('id', array('type'=>'hidden'));
 echo $this->AdminForm->input('title', array('type' => 'text'));
-echo '<div class="form-group">De '.$this->Form->date('begin', array('label' => 'Début'));
-echo ' à '.$this->Form->date('end', array('label' => 'Fin')).' (format jj/mm/aaaa)</div>';
+echo '<div class="form-group">De '.$this->AdminForm->date('begin', array('default'=>true,'label' => 'Début'));
+echo ' à '.$this->AdminForm->date('end', array('default'=>true,'label' => 'Fin')).' (format jj/mm/aaaa)</div>';
 echo $this->AdminForm->editor('content', array('label' => 'Contenu'));
 
 

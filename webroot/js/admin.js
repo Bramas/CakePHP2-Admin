@@ -14,9 +14,38 @@ function adminInitTinyMce()
 	        "insertdatetime media table contextmenu paste"
 	    ],
 	    language_url : AdminBaseUrl+'js/tinymce/langs/fr_FR.js',
+	    file_picker_callback: tinymce_picker
 	});
 	//console.log(tinymce);
 	//tinymce.EditorManager.createEditor('PageContent');
+}
+
+var current_tinymce_callback = false;
+
+function tinymce_picker(callback, value, meta) {
+
+	tinymce.activeEditor.windowManager.open({
+	    title: "My html dialog",
+	    url: BaseUrl+'/media/finder/tinymce/layout:iframe',
+	    width: 700,
+	    height: 600
+	});
+	current_tinymce_callback = callback;
+	/*
+    // Provide file and text for the link dialog
+    if (meta.filetype == 'file') {
+        callback('mypage.html', {text: 'My text'});
+    }
+
+    // Provide image and alt text for the image dialog
+    if (meta.filetype == 'image') {
+        callback('myimage.jpg', {alt: 'My alt text'});
+    }
+
+    // Provide alternative source and posted for the media dialog
+    if (meta.filetype == 'media') {
+        callback('movie.mp4', {source2: 'alt.ogg', poster: 'image.jpg'});
+    }*/
 }
 
 function adminSetAjaxPageProgress(p)

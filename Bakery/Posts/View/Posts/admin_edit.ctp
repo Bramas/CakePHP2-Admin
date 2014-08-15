@@ -13,6 +13,7 @@ echo $this->AdminForm->input('title', array('type' => 'text'));
 echo $this->AdminForm->editor('content', array('label' => 'Contenu'));
 
 $this->Upload->setModel('Post');
+$this->Upload->setFormHelper($this->AdminForm);
 echo $this->Upload->input('featured_image', array('type' => 'file', 'label'=>'Image'));
 
 

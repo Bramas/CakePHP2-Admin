@@ -7,8 +7,24 @@ class ConfigController extends AdminAppController {
 
 	public $uses = 'Admin.Config';
 
+
+	public function beforeFilter()
+	{
+		if (!empty($this->request->params['requested']) && $this->request->params['action'] == 'get') {
+			$this->Auth->allow();
+		}
+		parent::beforeFilter();
+	}
+	public function get($group)
+	{
+		return $this->admin_get($group);
+	}
 	public function admin_get($group)
 	{
+		if(empty($this->request->params['requested']))
+		{
+			throw new Exception("config/get has to be requested");
+		}
 		return $this->Config->findGroup($group);
 	}
 	public function admin_save()

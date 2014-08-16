@@ -21,6 +21,28 @@ echo $this->AdminForm->input('title', array(
 	'label' => 'Titre',
 	'disabled' => $disabled));
 ?>
+<div class="form-group menu-advance-options-show">
+	<a href="#"><span>+</span> Options avancées</a>
+	<script type="text/javascript">
+	jQuery(function($){
+		$('.menu-advance-options-show a').on('click',function(e){
+			e.preventDefault();
+			if($(this).find('span').html() == '+')
+			{
+				$('.menu-advance-options').slideDown();
+				$(this).find('span').html('-');
+			}
+			else
+			{
+				$('.menu-advance-options').slideUp();
+				$(this).find('span').html('+');
+			}
+		});
+		$('.menu-advance-options').slideUp(0);
+	})
+	</script>
+</div>
+<div class="menu-advance-options">
 <div class="form-group">
 	<div class="input-group input-group-sm">
 		<span class="input-group-addon"><?php echo $this->Html->url('/',true); ?></span>
@@ -30,12 +52,10 @@ echo $this->AdminForm->input('title', array(
 	</div>
 </div>
 <?php
-
-
 echo $this->AdminForm->input('params', array(
 'type' => (Admin::isAdministrator()?'text':'hidden'), 
 'label' => 'Paramètre'));
-
+echo '</div>';//.menu-advance-options
 
 
 $params = json_decode($this->request->data['Menu']['params'], true);

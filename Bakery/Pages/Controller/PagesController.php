@@ -162,7 +162,9 @@ class PagesController extends AppController {
 					'slug'=>$res['Menu']['slug']
 					),
 				'title' => $res['Menu']['title'],
-				'score' => $res[0]['Score']
+				'score' => $res[0]['Score'],
+				'type'  => 'Page',
+				'abstract' => $res['Page']['content']
 				);
 		}
 		return $ret;

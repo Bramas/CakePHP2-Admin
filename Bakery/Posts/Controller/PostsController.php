@@ -134,7 +134,9 @@ class PostsController extends AppController {
 					$res['Post']['id'].'-'.Inflector::slug($res['Post']['title'], '-')
 					),
 				'title' => $res['Post']['title'],
-				'score' => $res[0]['Score']
+				'score' => $res[0]['Score'],
+				'type' => 'Actualité',
+				'abstract' => $res['Post']['content']
 				);
 		}
 		return $ret;

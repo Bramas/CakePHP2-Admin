@@ -7,7 +7,6 @@ if(empty($results))
 else
 {
 
-debug($results);
 
 foreach($results as $result):
 

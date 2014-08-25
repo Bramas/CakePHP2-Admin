@@ -8,24 +8,26 @@ else
 {
 
 
-
-function texte_resume_brut($texte, $nbreCar)
+if(!function_exists('texte_resume_brut'))
 {
-	$texte 				= trim(strip_tags($texte));
-	if(is_numeric($nbreCar))
+	function texte_resume_brut($texte, $nbreCar)
 	{
-		$PointSuspension	= '...';
-		$texte			.= ' ';
-		$LongueurAvant		= strlen($texte);
-		if ($LongueurAvant > $nbreCar) {
-			$texte = substr($texte, 0, strpos($texte, ' ', $nbreCar));
-			if ($PointSuspension!='') {
-				$texte	.= $PointSuspension;
+		$texte 				= trim(strip_tags($texte));
+		if(is_numeric($nbreCar))
+		{
+			$PointSuspension	= '...';
+			$texte			.= ' ';
+			$LongueurAvant		= strlen($texte);
+			if ($LongueurAvant > $nbreCar) {
+				$texte = substr($texte, 0, strpos($texte, ' ', $nbreCar));
+				if ($PointSuspension!='') {
+					$texte	.= $PointSuspension;
+				}
 			}
 		}
-	}
-	return $texte;
-};
+		return $texte;
+	};
+}
 
 
 foreach($results as $result):

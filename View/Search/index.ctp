@@ -1,5 +1,10 @@
 <?php
-
+if(Configure::read('Admin.searchTitle'))
+{
+	$this->start('title');
+		echo Configure::read('Admin.searchTitle');
+	$this->end();
+}
 if(empty($results))
 {
 	echo __('Votre recherche n\'a retourné aucun résultat');

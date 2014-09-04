@@ -84,7 +84,10 @@ function adminSelectLink(link)
 		link = this;
 	}
 	$('li').removeClass('active');
-	$('#jstree').jstree(true).deselect_all();
+	if($('#jstree').length)
+	{
+		$('#jstree').jstree(true).deselect_all();
+	}
 	$(link).addClass('active');
 }
 function adminSelectNode(node)

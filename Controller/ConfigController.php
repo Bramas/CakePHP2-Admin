@@ -10,7 +10,11 @@ class ConfigController extends AdminAppController {
 
 	public function beforeFilter()
 	{
-		if (!empty($this->request->params['requested']) && $this->request->params['action'] == 'get') {
+		if (!empty($this->request->params['requested']) 
+			&& ( $this->request->params['action'] == 'get'
+				|| $this->request->params['action'] == 'admin_get'
+				)
+			) {
 			$this->Auth->allow();
 		}
 		parent::beforeFilter();

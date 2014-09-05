@@ -19,7 +19,19 @@ class AdminRoute extends CakeRoute {
             else
             {
                 $overrideAction = $url[2];
-                $params['pass'] = array_slice($url, 3);
+                $args = array_slice($url, 3);
+                foreach($args as $arg)
+                {
+                    if(strpos($arg, ':') === false)
+                    {
+                        $params['pass'][] = $arg;
+                    }
+                    else
+                    {
+                        list($k, $v) = explode(':', $arg);
+                        $params['named'][$k] = $v;
+                    }
+                }
             }
             
         }

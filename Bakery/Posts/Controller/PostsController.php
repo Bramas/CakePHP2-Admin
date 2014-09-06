@@ -15,7 +15,7 @@ class PostsController extends AppController {
 			)
 		);
 
-	public $helpers = array('Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
+	public $helpers = array('Media.Static','Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
 
 	public $adminViews = array(
 					'index' => array(

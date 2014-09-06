@@ -244,7 +244,7 @@ jQuery(document).on('submit', '#dialog-reconnect form', function(e){
 
 jQuery(function($){
 	adminPanelLoaded();
-	history.replaceState({url:window.location.href})
+	history.replaceState({url:window.location.href}, document.title, window.location.href)
 
 
 	$('.nav[data-admin-toggle=ajax] li > a').on('click', function(ev){

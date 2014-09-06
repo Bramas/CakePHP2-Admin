@@ -267,18 +267,21 @@ jQuery(function($){
 
 
 	$(window).on('scroll', function(d){
-		$('.admin-panel-header').removeClass('fixed');
 		if($('.admin-panel-header').length)
 		{
-			$('.main').removeClass('admin-fixed-panel-header');
-		}		
-
-		if($(window).scrollTop() > $('.admin-panel-header').offset().top -45)
-		{
-			$('.admin-panel-header').addClass('fixed');
+			$('.admin-panel-header').removeClass('fixed');
 			if($('.admin-panel-header').length)
 			{
-				$('.main').addClass('admin-fixed-panel-header');
+				$('.main').removeClass('admin-fixed-panel-header');
+			}		
+
+			if($(window).scrollTop() > $('.admin-panel-header').offset().top -45)
+			{
+				$('.admin-panel-header').addClass('fixed');
+				if($('.admin-panel-header').length)
+				{
+					$('.main').addClass('admin-fixed-panel-header');
+				}
 			}
 		}
 	});

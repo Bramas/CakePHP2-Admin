@@ -2,6 +2,7 @@
     "name": "bramas/cakephp2-admin",
     "type": "cakephp-plugin",
     "description": "Admin Plugin for CakePHP 2",
+    "licence": "GPLv3",
     "extra": {
         "installer-name": "Admin"
     },

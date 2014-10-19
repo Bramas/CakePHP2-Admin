@@ -141,6 +141,7 @@ function adminLoadLayoutContent(state)
 {
 	if(state.url && state.url == window.location.pathname)
 	{
+		window.location.reload();
 		return;
 	}
 	url = state.url ? state.url : state;

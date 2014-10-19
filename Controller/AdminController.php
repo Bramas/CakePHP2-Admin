@@ -9,6 +9,11 @@ class AdminController extends AdminAppController {
             'index' => 'Se connecter à l\'administration',
         );
 
+    public $helpers = array('Admin.AdminConfig');
+
+    public function admin_settings() {
+
+    }
     public function admin_index() {
 
 

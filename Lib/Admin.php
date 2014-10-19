@@ -37,6 +37,18 @@ class Admin {
 
 
 
+    public static function getConfig($group, $name, $default=null) {
+        $o = new Object();
+        $config = $o->requestAction('/admin/config/get/'.$group);
+        if(isset($config[$name]))
+        {
+            return $config[$name];
+        }
+        return $default;
+    }
+
+
+
     public static function getAdminCapabilities() {
         return self::cache(__METHOD__, function() {
             $map = array();

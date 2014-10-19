@@ -61,6 +61,11 @@ Router::connect(
 
 
 Router::connect(
+	'/admin/settings',
+	array('action'=>'settings', 'plugin'=>'admin', 'controller'=>'admin', 'admin'=>true)
+);
+
+Router::connect(
 	'/admin/:controller',
 	array('action'=>'index', 'admin'=>true)
 );

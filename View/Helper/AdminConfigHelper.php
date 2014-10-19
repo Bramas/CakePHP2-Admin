@@ -11,6 +11,7 @@ class AdminConfigHelper extends AppHelper {
 	public $helpers = array('Admin.AdminForm');
 
 	private $_group = null;
+	private $_display = null;
 	private $_groupValues = array();
 
 
@@ -50,6 +51,28 @@ class AdminConfigHelper extends AppHelper {
 	        });
 		});
 
+		$('form.admin-config-form').on('submit', function(e){
+			e.preventDefault();
+        	var postData = $(this).serializeArray();
+	        $(this).html('Sauvegarde en cours...');
+			$.ajax(
+			{
+	            url:$(this).attr('action'),
+	            type: "POST",
+	            dataType:'json',
+	            data : postData,
+	            context:{
+	            	item:$(this)
+	            },
+	            success:function(data)
+	            {
+	            	console.log(data);
+	            	this.item.html('Sauvegardé avec succés');
+	            }
+	        });
+		});
+
+
 	});
 </script>
 
@@ -57,22 +80,28 @@ class AdminConfigHelper extends AppHelper {
 
 	}
 
-	public function group($group)
+	public function group($group, $options = array())
 	{
+		$options = array_merge(array('display' => 'modal'), (array)$options);
 		$this->init();
+		$this->_display = $options['display'];
 		$this->_group = $group;
 		$this->_groupValues = $this->requestAction('/admin/config/get/'.$group);
 
-		return '<div class="admin-config-modal modal fade admin-config-modal-'.$group.'" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">'.
-		$this->AdminForm->create('Config', array('url' => '/admin/config/save')).
-			  '<div class="modal-dialog modal-lg">'.
-			    '<div class="modal-content">'.
-			    '<div class="modal-header">'.
-		            '<button type="button" class="close" data-dismiss="modal">×</button>'.
-		            '<h3>Options Avancées</h3>'.
-		        '</div>'.
-		        '<div class="modal-body form-horizontal">'.
-		$this->AdminForm->input('_group', array('value' => $this->_group, 'type'=>'hidden'));
+		if($this->_display  == 'modal')
+		{
+			return '<div class="admin-config-modal modal fade admin-config-modal-'.$group.'" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">'.
+			$this->AdminForm->create('Config', array('url' => '/admin/config/save')).
+				  '<div class="modal-dialog modal-lg">'.
+				    '<div class="modal-content">'.
+				    '<div class="modal-header">'.
+			            '<button type="button" class="close" data-dismiss="modal">×</button>'.
+			            '<h3>Options Avancées</h3>'.
+			        '</div>'.
+			        '<div class="modal-body form-horizontal">'.
+			$this->AdminForm->input('_group', array('value' => $this->_group, 'type'=>'hidden'));
+		}
+		return $this->AdminForm->create('Config', array('url' => '/admin/config/save', 'class'=>'admin-config-form')).$this->AdminForm->input('_group', array('value' => $this->_group, 'type'=>'hidden'));
 	}
 
 	public function modalButton($group, $class = "btn btn-primary")
@@ -107,9 +136,13 @@ class AdminConfigHelper extends AppHelper {
 	}
 	public function end()
 	{
-		return '</div><div class="modal-footer">'.
-          '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'.
-          '<button type="button" class="btn btn-primary">Sauvegarder</button>'.
-        '</div></div></div>'.$this->AdminForm->end().'</div>';
+		if($this->_display  == 'modal')
+		{
+			return '</div><div class="modal-footer">'.
+	          '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'.
+	          '<button type="button" class="btn btn-primary">Sauvegarder</button>'.
+	        '</div></div></div>'.$this->AdminForm->end().'</div>';
+	    }
+	    return $this->AdminForm->end('Sauvegarder');
 	}
 }

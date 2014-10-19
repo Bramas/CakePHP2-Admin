@@ -24,20 +24,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <?php echo $this->Html->link('Project name','/',array('class'=>'navbar-brand')); ?>
+          <?php
+
+           echo $this->Html->link(Admin::getConfig('admin', 'site-title', 'Titre du Site'),'/',array('class'=>'navbar-brand')); ?>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><?php echo $this->Html->link('Dashboard','/admin'); ?></li>
             <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-      Utilisateurs <span class="caret"></span>
+      Utilisateurs <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
                 <li><?php echo $this->Html->link('Roles','/admin/roles'); ?></li>
-                <li><a href="#">Mon profil</a></li>
+                <li><?php echo $this->Html->link('Mon profil','/admin/users/edit/'.$this->Session->read('Auth.User.id')); ?></li>
               </ul>
             </li>
-            <li><a href="#">Settings</a></li>
+            <li><?php echo $this->Html->link('Settings','/admin/settings'); ?></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">

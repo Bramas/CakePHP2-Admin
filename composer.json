@@ -1,5 +1,6 @@
 {
     "name": "Bramas/CakePHP2-Admin",
+    "type": "cakephp-plugin",
     "description": "Admin Plugin for CakePHP 2",
     "authors": [
         {

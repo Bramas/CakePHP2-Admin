@@ -12,6 +12,11 @@ class RolesController extends AdminAppController {
 		if(!empty($this->request->data))
 		{
 			App::uses('Set', 'Utility');
+			if(empty($this->request->data['Role']['alias']))
+			{
+                App::uses('Inflector', 'Utility');
+				$this->request->data['Role']['alias'] = Inflector::slug($this->request->data['Role']['name'], '-');
+			}
 			$dataCapabilities = Set::flatten($this->request->data['RoleCapability']);
 			$this->Role->save($this->request->data);
 			$defaultCapabilities = $this->Role->Capability->find('list',array(

@@ -10,7 +10,7 @@
 
     <title>Admin Dashboard</title>
 
-    <?php echo $this->element('head',array(),array('plugin'=>'Admin')); ?>
+    <?php echo $this->element('admin_head',array(),array('plugin'=>'Admin')); ?>
 
   </head>
   <body>

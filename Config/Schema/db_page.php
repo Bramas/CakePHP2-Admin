@@ -11,6 +11,7 @@ class DbPageSchema extends CakeSchema {
 	public $pages = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'author_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
+		'title' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
 		'content' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'status' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
 		'parent_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),

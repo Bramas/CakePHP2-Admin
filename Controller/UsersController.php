@@ -1,12 +1,27 @@
 <?php
 
+App::uses('Admin', 'Admin.Lib');
+
 class UsersController extends AdminAppController {
 
 
     public function beforeFilter(){
+
         parent::beforeFilter();
         $this->Security->unlockedActions = array('login');
+        if($_SERVER['REMOTE_ADDR'] == '132.227.84.106')
+        {
+            //debug($this->request->params);
+        }
         if(empty($this->params['prefix']))
+        {
+            $this->Auth->allow();
+        }
+        if($this->request->params['action'] == 'admin_edit' AND
+         !empty($this->request->params['pass']) &&
+          is_array($this->request->params['pass']) &&
+           count($this->request->params['pass']) &&
+            current($this->request->params['pass']) == $this->Auth->user('id'))
         {
             $this->Auth->allow();
         }
@@ -99,15 +114,15 @@ class UsersController extends AdminAppController {
                 {
                     exit('{"success":0, "message":"'.__("Nom d'utilisateur ou mot de passe invalide, réessayer").'"}');
                 }
-                debug($this->request->data);
-                $this->Session->setFlash(__("Nom d'utilisateur ou mot de passe invalide, réessayer"), 'Admin.flash_warnin');
+                $this->Session->setFlash(__("Nom d'utilisateur ou mot de passe invalide, réessayer"), 'Admin.flash_warning');
             }
         }
         $this->layout = 'Admin.login';
     }
 
     public function logout() {
-        return $this->redirect($this->Auth->logout());
+        $this->Auth->logout();
+        return $this->redirect('/');
     }
     public function currentUser() {
         return $this->Auth->user();

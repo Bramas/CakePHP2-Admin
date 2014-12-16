@@ -11,16 +11,23 @@ function adminInitTinyMce()
 	    plugins: [
 	        "advlist autolink lists link image charmap print preview anchor",
 	        "searchreplace visualblocks code fullscreen",
-	        "insertdatetime media table contextmenu paste"
+	        "insertdatetime media table contextmenu paste textcolor"
 	    ],
+	    relative_urls : false,
+		document_base_url : BaseUrl,
 	    language_url : AdminBaseUrl+'js/tinymce/langs/fr_FR.js',
-	    file_picker_callback: tinymce_picker
+	    file_picker_callback: tinymce_picker,
+	    toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	});
 	//console.log(tinymce);
 	//tinymce.EditorManager.createEditor('PageContent');
 }
 
 var current_tinymce_callback = false;
+
+function supports_history_api() {
+  return !!(window.history && history.pushState);
+}
 
 function tinymce_picker(callback, value, meta) {
 
@@ -139,9 +146,13 @@ function adminMakeid(length)
 }
 function adminLoadLayoutContent(state)
 {
+	if(!supports_history_api())
+	{
+		window.location.href = state.url;
+		return;
+	}
 	if(state.url && state.url == window.location.pathname)
 	{
-		window.location.reload();
 		return;
 	}
 	url = state.url ? state.url : state;
@@ -245,26 +256,29 @@ jQuery(document).on('submit', '#dialog-reconnect form', function(e){
 
 jQuery(function($){
 	adminPanelLoaded();
-	history.replaceState({url:window.location.href}, document.title, window.location.href)
-
-
-	$('.nav[data-admin-toggle=ajax] li > a').on('click', function(ev){
-		ev.preventDefault();
-
-		var clickId = $(this).parent().attr('admin-menu-click-id');
-		if(!clickId)
-		{
-			clickId = adminMakeid(10);
-			$(this).parent().attr('admin-menu-click-id', clickId);
-		}
-		adminSelectLink('li[admin-menu-click-id='+clickId+']');
-		adminLoadLayoutContent({
-			url:$(this).attr('href'),
-			title:$(this).attr('title'),
-			callback:'adminSelectLink',
-			context:'li[admin-menu-click-id='+clickId+']'
-		});
-	})
+	
+	if(supports_history_api())
+	{
+		history.replaceState({url:window.location.href}, document.title, window.location.href)
+	
+		$('.nav[data-admin-toggle=ajax] li > a').on('click', function(ev){
+			ev.preventDefault();
+	
+			var clickId = $(this).parent().attr('admin-menu-click-id');
+			if(!clickId)
+			{
+				clickId = adminMakeid(10);
+				$(this).parent().attr('admin-menu-click-id', clickId);
+			}
+			adminSelectLink('li[admin-menu-click-id='+clickId+']');
+			adminLoadLayoutContent({
+				url:$(this).attr('href'),
+				title:$(this).attr('title'),
+				callback:'adminSelectLink',
+				context:'li[admin-menu-click-id='+clickId+']'
+			});
+		})
+	}
 
 
 	$(window).on('scroll', function(d){

@@ -10,7 +10,7 @@
 
     <title>Admin Dashboard</title>
 
-    <?php echo $this->element('head',array(),array('plugin'=>'Admin')); ?>
+    <?php echo $this->element('admin_head',array(),array('plugin'=>'Admin')); ?>
 
   </head>
   <body>
@@ -30,21 +30,29 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><?php echo $this->Html->link('Dashboard','/admin'); ?></li>
+            <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <?php 
+      $user = Admin::currentUser(); 
+      echo $user['username']; ?> <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><?php echo $this->Html->link('Mon profil','/admin/users/edit/'.$this->Session->read('Auth.User.id')); ?></li>
+                <li><?php echo $this->Html->link('Déconnexion','/users/logout'); ?></li>
+              </ul>
+            </li>
+            <li><?php echo $this->Html->link('Tableau de bord','/admin'); ?></li>
             <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
       Utilisateurs <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
-                <li><?php echo $this->Html->link('Roles','/admin/roles'); ?></li>
-                <li><?php echo $this->Html->link('Mon profil','/admin/users/edit/'.$this->Session->read('Auth.User.id')); ?></li>
+                <li><?php echo $this->Html->link('Rôles','/admin/roles'); ?></li>
               </ul>
             </li>
             <li><?php echo $this->Html->link('Settings','/admin/settings'); ?></li>
             <li><a href="#">Help</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
+          <!--<form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
-          </form>
+          </form>-->
         </div>
       </div>
     </div>

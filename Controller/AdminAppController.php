@@ -16,6 +16,7 @@ class AdminAppController extends AppController {
                 )
         )
     );
+    public $helpers = array('Media.Static');
     public function blackhole($type) {
         exit($type);
     }

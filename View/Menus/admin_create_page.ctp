@@ -1,4 +1,5 @@
 <?php
+
 foreach($Views as $view):
 	$url = array(
 		$id,

@@ -5,6 +5,7 @@ App::uses('AdminAppController', 'Admin.Controller');
 
 class SearchController extends AdminAppController {
 
+	public $helpers = array('Media.Static');
 
     public function beforeFilter(){
         parent::beforeFilter();

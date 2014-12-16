@@ -10,6 +10,7 @@ class MenusController extends AdminAppController {
     var $uses = array('Admin.Menu');
 
 
+    public $adminName = 'Menus';
     public $adminViews = array(
                     'root_menu' => array(
                         'title' => 'Contient d\'autres liens'
@@ -36,6 +37,10 @@ class MenusController extends AdminAppController {
         if(Admin::hasCapability('admin.admin.index'))
         {
             $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit'));
+        }
+        if(Admin::hasCapability('admin.menus.create_menu'))
+        {
+            $this->Auth->allow(array('admin_create_page'));
         }
     }
 
@@ -194,7 +199,7 @@ class MenusController extends AdminAppController {
     	{
         	$this->request->data['Menu']['args'] = $args;
             $fields = array();
-            if(!Admin::hasCapability('admin.menu.edit'))
+            if(!Admin::hasCapability('admin.menus.edit'))
             {
                 $fields = array('args');
             }
@@ -222,7 +227,7 @@ class MenusController extends AdminAppController {
         }
         else
         {
-        	$this->Session->setFlash(__('Erreur pendant la sauvegarde.'), 'Admin.flash_error');
+        	$this->Session->setFlash(__('Erreur pendant la sauvegarde. (erreur du modèle associé)'), 'Admin.flash_error');
         }
 
     	$this->redirect(array('action' =>'edit', $id));

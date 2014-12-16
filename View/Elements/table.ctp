@@ -88,6 +88,10 @@
 				{
 					continue;
 				}
+				if(empty($action['options']))
+				{
+					$action['options'] = array();
+				}
 				if(!empty($action['require']))
 				{
 					$args = null;
@@ -121,6 +125,10 @@
 				if(!empty($action['options']['title']))
 				{
 					$action['options']['data-toggle'] = "tooltip";
+				}
+				if($id == 'delete' && !isset($action['options']['confirm']))
+				{
+					$action['options']['confirm'] = 'Confirmer la suppression?';
 				}
 				$actionStrings[] = ' '.$this->Html->link(empty($action['label'])?'':$action['label'], $url, empty($action['options'])?array():$action['options']);
 			}

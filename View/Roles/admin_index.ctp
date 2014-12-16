@@ -1,9 +1,9 @@
 <?php
 
 echo $this->element('Admin.panel_header', array(
-	'title'=>'Roles' , 
+	'title'=>'Rôles' , 
 	'addNew' => array(
-		'label' => 'Nouveau Role',
+		'label' => 'Nouveau Rôle',
 		'url' => array('action' => 'edit')
 		)));
 

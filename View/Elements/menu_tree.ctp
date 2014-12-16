@@ -53,9 +53,9 @@ if(Admin::hasCapability('admin.menus.list'))
 
 <script type="text/javascript">
 
-var canCreateNode = <?php echo Admin::hasCapability('admin.menu.create_menu')?'true':'false'; ?>;
-var canDeleteNode = <?php echo Admin::hasCapability('admin.menu.delete')?'true':'false'; ?>;
-var canEditNode = <?php echo Admin::hasCapability('admin.menu.edit')?'true':'false'; ?>;
+var canCreateNode = <?php echo Admin::hasCapability('admin.menus.create_menu')?'true':'false'; ?>;
+var canDeleteNode = <?php echo Admin::hasCapability('admin.menus.delete')?'true':'false'; ?>;
+var canEditNode = <?php echo Admin::hasCapability('admin.menus.edit')?'true':'false'; ?>;
 
 jQuery(function ($) { 
 	$('#jstree').jstree(
@@ -113,7 +113,7 @@ jQuery(function ($) {
 						},
 	                	separator_after: true
 					};
-				}
+				}/*
 				if(canEditNode)
 				{
 					ret.rename = {
@@ -121,7 +121,7 @@ jQuery(function ($) {
 						label:"Renommer",
 						action:function(ev){ tree.edit(node); }
 					};
-				}
+				}*/
 				if(canEditNode)
 				{
 					ret.setDefault = {

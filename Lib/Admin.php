@@ -57,11 +57,12 @@ class Admin {
                 {
                     continue;
                 }
-                $map[$info['controller']] = array();
+                $controllerName = empty($info['adminName']) ? $info['controller'] : $info['adminName'];
+                $map[$controllerName] = array();
                 foreach($info['adminCapabilities'] as $cap => $name)
                 {
                     $p = empty($info['plugin'])? '' : $info['plugin'].'.';
-                    $map[$info['controller']][$p.$info['controller'].'.'.$cap] = $name;
+                    $map[$controllerName][$p.$info['controller'].'.'.$cap] = $name;
                 }
                 
             }
@@ -89,6 +90,7 @@ class Admin {
                         );
                 }
             }
+
             return $map;
         });
     }
@@ -179,6 +181,11 @@ class Admin {
         if(!empty($Object->adminCapabilities))
         {
             $ret['adminCapabilities'] = $Object->adminCapabilities;
+            $empty = false;
+        }
+        if(!empty($Object->adminName))
+        {
+            $ret['adminName'] = $Object->adminName;
             $empty = false;
         }
         if(!empty($Object->adminSearch))
@@ -327,6 +334,11 @@ class Admin {
         return $plugin.'.'.$controller.'.'.$action;
     }
 
+    public static function currentUser()
+    {
+            $o = new Object();
+        return $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
+    }
     public static function isAdministrator($user = null)
     {
 		if(!is_array($user))

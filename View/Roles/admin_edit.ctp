@@ -2,15 +2,44 @@
 
 
 echo $this->element('Admin.panel_header', array(
-	'title'=>'Editer un role' , 
+	'title'=>'Editer un rôle' , 
 	'backUrl' => array('action' => 'index')
 		));
 
 
 echo $this->AdminForm->create('Role');
 echo $this->AdminForm->input('id', array('type' => 'hidden'));
-echo $this->AdminForm->input('alias');
 echo $this->AdminForm->input('name');
+?>
+
+<div class="form-group menu-advance-options-show">
+	<a href="#"><span>+</span> Options avancées</a>
+	<script type="text/javascript">
+	jQuery(function($){
+		$('.menu-advance-options-show a').on('click',function(e){
+			e.preventDefault();
+			if($(this).find('span').html() == '+')
+			{
+				$('.menu-advance-options').slideDown();
+				$(this).find('span').html('-');
+			}
+			else
+			{
+				$('.menu-advance-options').slideUp();
+				$(this).find('span').html('+');
+			}
+		});
+		$('.menu-advance-options').slideUp(0);
+	})
+	</script>
+</div>
+<div class="menu-advance-options">
+<?php 
+echo $this->AdminForm->input('alias');
+ ?>
+</div>
+
+<?php
 
 App::uses('Set', 'Utility');
 
@@ -21,7 +50,7 @@ if(empty($this->request->data['Capability'])){
 }
 ?>
 
-<h3>Permissions du role</h3>
+<h3>Permissions du rôle</h3>
 <?php
 
 App::uses('Admin', 'Admin.Lib');

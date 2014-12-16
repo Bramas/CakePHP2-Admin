@@ -8,6 +8,19 @@ class DbAdminSchema extends CakeSchema {
 	public function after($event = array()) {
 	}
 
+	public $config = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
+		'group' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 200),
+		'name' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 300),
+		'value' => array('type' => 'text', 'null' => false, 'default' => ''),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+	    'tableParameters' => array(
+	        'engine' => 'InnoDB',
+	        'charset' => 'utf8',
+	        'collate' => 'utf8_general_ci',
+	        'encoding' => 'utf8_general_ci'
+		    )
+		);
 	public $users = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'username' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),

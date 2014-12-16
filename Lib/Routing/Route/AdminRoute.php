@@ -3,14 +3,37 @@
 class AdminRoute extends CakeRoute {
  
     function parse($url) {
+        //return false;//exit(debug(parent::parse($url)));
         //explode('/', $url)
         $url = explode('/', $url);
+        $overrideAction = null;
         if(count($url) > 1)
         {
             $params = array(
                 'slug' => $url[1]
             );
-            $params['pass'] = array_slice($url, 2);
+            if(count($url) < 4)
+            {
+                $params['pass'] = array_slice($url, 2);
+            }
+            else
+            {
+                $overrideAction = $url[2];
+                $args = array_slice($url, 3);
+                foreach($args as $arg)
+                {
+                    if(strpos($arg, ':') === false)
+                    {
+                        $params['pass'][] = $arg;
+                    }
+                    else
+                    {
+                        list($k, $v) = explode(':', $arg);
+                        $params['named'][$k] = $v;
+                    }
+                }
+            }
+            
         }
         else
         {
@@ -33,9 +56,11 @@ class AdminRoute extends CakeRoute {
         {
             $menu = $Menu->findBySlug($params['slug']);
         }
+
         
 	    if(empty($menu))
         {
+            return false;
             $params['controller']=$params['slug'];
             if(!empty($params['pass']) && count($params['pass']))
             {
@@ -57,11 +82,28 @@ class AdminRoute extends CakeRoute {
             throw new NotFoundException(__('Page introuvable'));
         }
 
+        $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
+        $menu['Menu']['params'] = json_decode($menu['Menu']['params'], true);
         Configure::write('Admin.Menu',$menu['Menu']);
+        $menuPath = $Menu->getPath($menu['Menu']['id']);
+        foreach($menuPath as &$menuPathItem)
+        {
+            $menuPathItem['Menu']['custom_fields'] = json_decode($menuPathItem['Menu']['custom_fields'], true);
+            $menuPathItem['Menu']['params'] = json_decode($menuPathItem['Menu']['params'], true);
+        }
+        Configure::write('Admin.MenuPath',$menuPath);
+
         $params['controller'] =  $view['frontend']['url']['controller'];
-        $params['action'] =  $view['frontend']['url']['action'];
+        if($overrideAction)
+        {
+            $params['action'] =  $overrideAction;
+        }
+        else
+        {
+            $params['action'] =  $view['frontend']['url']['action'];
+        }
         $params['plugin'] =  $view['frontend']['url']['plugin'];
-        if($menu['Menu']['args'] !== '')
+        if(!$overrideAction && $menu['Menu']['args'] !== '')
         {
             $params['pass'] = isset($params['pass']) ? $params['pass'] : array();
             $params['pass'] = array_merge((array)$menu['Menu']['args'],$params['pass']);

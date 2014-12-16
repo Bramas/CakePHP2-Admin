@@ -9,6 +9,11 @@ echo $this->element('Admin.panel_header', array(
 $disabled = !Admin::hasCapability('admin.menus.edit');
 
 echo $this->AdminForm->create('Menu', array('url' => array('action' => 'save')));
+if($menu_item_panel_header)
+{
+	echo $this->element('Admin.panel_header', $menu_item_panel_header);
+}
+
 echo $this->AdminForm->input('id', array('type' => 'hidden'));
 echo $this->AdminForm->input('title', array(
 	'type' => 'text', 
@@ -16,6 +21,28 @@ echo $this->AdminForm->input('title', array(
 	'label' => 'Titre',
 	'disabled' => $disabled));
 ?>
+<div class="form-group menu-advance-options-show">
+	<a href="#"><span>+</span> Options avancées</a>
+	<script type="text/javascript">
+	jQuery(function($){
+		$('.menu-advance-options-show a').on('click',function(e){
+			e.preventDefault();
+			if($(this).find('span').html() == '+')
+			{
+				$('.menu-advance-options').slideDown();
+				$(this).find('span').html('-');
+			}
+			else
+			{
+				$('.menu-advance-options').slideUp();
+				$(this).find('span').html('+');
+			}
+		});
+		$('.menu-advance-options').slideUp(0);
+	})
+	</script>
+</div>
+<div class="menu-advance-options">
 <div class="form-group">
 	<div class="input-group input-group-sm">
 		<span class="input-group-addon"><?php echo $this->Html->url('/',true); ?></span>
@@ -25,6 +52,34 @@ echo $this->AdminForm->input('title', array(
 	</div>
 </div>
 <?php
+echo $this->AdminForm->input('params', array(
+'type' => (Admin::isAdministrator()?'text':'hidden'), 
+'label' => 'Paramètre'));
+echo '</div>';//.menu-advance-options
+
+
+$params = json_decode($this->request->data['Menu']['params'], true);
+if(!empty($params['custom_fields']) && is_array($params['custom_fields']))
+{
+	foreach($params['custom_fields'] as $name => $type)
+	{
+/*
+		if(is_array($custom_field))
+		{
+			$type = empty($custom_field['type'])?'text':$custom_field['type'];
+		}
+		else
+		{
+			$type = $name = $custom_field;
+		}*/
+		if(!is_array($type))
+		{
+			$type = array('type' => $type);
+		}
+		$type = array_merge(array('type' => $type['type'], 'label' => $type['type']), $type);
+		echo $this->element('custom_fields/'.$type['type'], array('name' => $name, 'label'=>$type['label']));
+	}
+}
 
 echo $menu_item_content;
 

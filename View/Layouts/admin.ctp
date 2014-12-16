@@ -24,21 +24,22 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <?php echo $this->Html->link('Project name','/',array('class'=>'navbar-brand')); ?>
+          <?php
+
+           echo $this->Html->link(Admin::getConfig('admin', 'site-title', 'Titre du Site'),'/',array('class'=>'navbar-brand')); ?>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><?php echo $this->Html->link('Dashboard','/admin'); ?></li>
             <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
-      Utilisateurs <span class="caret"></span>
+      Utilisateurs <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><?php echo $this->Html->link('Utilisateurs','/admin/users'); ?></li>
                 <li><?php echo $this->Html->link('Roles','/admin/roles'); ?></li>
-                <li><?php echo $this->Html->link('Permissions','/admin/capabilities'); ?></li>
-                <li><a href="#">Mon profil</a></li>
+                <li><?php echo $this->Html->link('Mon profil','/admin/users/edit/'.$this->Session->read('Auth.User.id')); ?></li>
               </ul>
             </li>
-            <li><a href="#">Settings</a></li>
+            <li><?php echo $this->Html->link('Settings','/admin/settings'); ?></li>
             <li><a href="#">Help</a></li>
           </ul>
           <form class="navbar-form navbar-right">
@@ -91,5 +92,39 @@
         </div>
       </div>
     </div>
+
+    <div id="dialog-reconnect" class="modal fade" id="reconnect-modal" tabindex="-1" role="dialog" aria-labelledby="Reconnexion" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="myModalLabel">Se reconnecter</h4>
+        </div>
+        <!--<form>
+        <div class="modal-body">
+           <div class="form-group"><label for="formUserUsername">Identifiant</label><input id="formUserUsername" class="form-control" type="text" /></div>
+           <div class="form-group"><label for="formUserPassword">Mot de passe</label><input id="formUserPassword" class="form-control" type="password" /></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <input type="submit" class="btn btn-primary" value="Se Reconnecter" />
+        </div>
+        </form>-->
+        <div class="users form">
+          <?php echo $this->AdminForm->create('User');?>
+            <div class="modal-body">
+                <?php echo $this->AdminForm->input('username');
+                echo $this->AdminForm->input('password');
+            ?>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Se Reconnecter" />
+            </div>
+            <?php echo $this->AdminForm->end();//__('Se Reconnecter'));?>
+        </div>
+      </div>
+    </div>
+  </div>
   </body>
 </html>

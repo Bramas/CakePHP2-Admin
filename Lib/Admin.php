@@ -37,6 +37,18 @@ class Admin {
 
 
 
+    public static function getConfig($group, $name, $default=null) {
+        $o = new Object();
+        $config = $o->requestAction('/admin/config/get/'.$group);
+        if(isset($config[$name]))
+        {
+            return $config[$name];
+        }
+        return $default;
+    }
+
+
+
     public static function getAdminCapabilities() {
         return self::cache(__METHOD__, function() {
             $map = array();
@@ -147,6 +159,10 @@ class Admin {
     public static function getControllerInfo($plugin, $controller) {
         Admin::importControllerClass($plugin, $controller);
         $controllerClass = Admin::getControllerClassName($controller);
+        if(!class_exists($controllerClass))
+        {
+        	return false;
+        }
         $Object = new $controllerClass;
         $ret = array('adminMenu' => false, 'adminCapabilities' => false, 'adminViews' => false);
         $empty = true;
@@ -164,6 +180,14 @@ class Admin {
         {
             $ret['adminCapabilities'] = $Object->adminCapabilities;
             $empty = false;
+        }
+        if(!empty($Object->adminSearch))
+        {
+            if(method_exists($controllerClass, $Object->adminSearch))
+            {
+                $ret['adminSearch'] = $Object->adminSearch;
+                $empty = false;
+            }
         }
         if($empty)
         {
@@ -192,6 +216,20 @@ class Admin {
         }
         App::uses($controllerClass, $plugin.'.Controller');
     }
+    public static function extractPluginAndController($array)
+    {
+        return array($array['Menu']['plugin'], $array['Menu']['controller']);
+    }
+    public static function getController($plugin, $controller = null)
+    {
+        if(is_array($plugin))
+        {
+            list($plugin, $controller) = Admin::extractPluginAndController($plugin);
+        }
+        Admin::importControllerClass($plugin, $controller);
+        $controllerClassName = ucfirst($controller).'Controller';
+        return new $controllerClassName();
+    }
 
     public static function getAdminView($plugin,$controller = null, $view = null, $args='')
     {
@@ -217,7 +255,11 @@ class Admin {
         $controllerClassName = $controller.'Controller';
         Admin::importControllerClass($plugin,$controller);
 
-        $ret = array();
+        $ret = array(
+            'controller' => $controller,
+            'controllerClassName' => $controllerClassName,
+            'controllerImportName' => (empty($plugin)?'':$plugin.'.').ucfirst($controller)
+            );
         $defaultUrl = array(
                 'controller' => $controller,
                 'action' => $view,
@@ -241,6 +283,10 @@ class Admin {
                 'method' => 'admin_'.$defaultUrl['action']
             );
         $ret['edit']['exists'] = method_exists($controllerClassName, $ret['edit']['method']);
+        $ret['edit_panel_header']=array(
+            'method' => $ret['edit']['method'].'_panel_header',
+            'exists' => method_exists($controllerClassName, $ret['edit']['method'].'_panel_header')
+            );
 
         if(!empty($info[$view]['save']))
         {
@@ -281,6 +327,19 @@ class Admin {
         return $plugin.'.'.$controller.'.'.$action;
     }
 
+    public static function isAdministrator($user = null)
+    {
+		if(!is_array($user))
+        {
+            $o = new Object();
+            $user = $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
+        }
+        if($user['Role']['alias'] == 'administrator')
+        {
+            return true;
+        }
+        return false;
+    }
     public static function hasCapability($user, $capability = null, $args = null)
     {
         if(!is_array($user))

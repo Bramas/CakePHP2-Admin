@@ -3,6 +3,23 @@
 class Page extends AppModel
 {
 
+	var $belongsTo = array('User' => array(
+			'foreignKey' => 'author_id',
+			'className'  => 'Admin.User'
+		));
+
+	public function revisions($parent_id = null){
+		if(!isset($parent_id)){
+			$parent_id = $this->field($parent_id);
+		}
+		return $this->find('all', array(
+			'conditions' => array(
+				'parent_id' => $parent_id
+				),
+			'order' => array('Page.created DESC'),
+			'recursive' => 1
+			));
+	}
 	private function getLastPendingId($id, $author_id)
 	{
 		$first = $this->find('first', array(
@@ -11,7 +28,7 @@ class Page extends AppModel
 				'parent_id' => $id,
 				'status'    => 'pending'
 			),
-			'order' => array('created' => 'DESC')));
+			'order' => array('Page.created' => 'DESC')));
 		if(empty($first))
 		{
 			return null;
@@ -47,7 +64,7 @@ class Page extends AppModel
 
 		$first = $this->find('first', array(
 			'conditions'=> $conditions,
-			'order' => array('created' => 'DESC')));
+			'order' => array('Page.created' => 'DESC')));
 
 		if(!empty($first))
 		{
@@ -65,7 +82,7 @@ class Page extends AppModel
 		}
 		$first = $this->find('first', array(
 			'conditions'=> $conditions,
-			'order' => array('created' => 'DESC')));
+			'order' => array('Page.created' => 'DESC')));
 
 		if(!empty($first))
 		{
@@ -81,7 +98,13 @@ class Page extends AppModel
 	public function publish($data)
 	{
 		$data['Page']['status'] = 'published';
+		$new = empty($data['Page']['id']);
 		$this->create();
-		return $this->save($data);
+		$ok = $this->save($data);
+		if($new)
+		{
+			$this->saveField('parent_id', $this->id);
+		}
+		return $ok;
 	}
 }

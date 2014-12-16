@@ -1,0 +1,19 @@
+{
+    "name": "bramas/cakephp2-admin",
+    "type": "cakephp-plugin",
+    "description": "Admin Plugin for CakePHP 2",
+    "licence": "GPLv3",
+    "extra": {
+        "installer-name": "Admin"
+    },
+    "authors": [
+        {
+            "name": "Quentin Bramas",
+            "email": "quentin@bramas.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "composer/installers": "*"
+    }
+}

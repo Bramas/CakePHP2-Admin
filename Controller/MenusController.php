@@ -6,7 +6,7 @@ App::uses('AdminAppController', 'Admin.Controller');
 class MenusController extends AdminAppController {
 
 
-	var $helpers = array('Admin.AdminForm');
+	var $helpers = array('Admin.AdminForm', 'Media.Media');
     var $uses = array('Admin.Menu');
 
 
@@ -24,8 +24,24 @@ class MenusController extends AdminAppController {
 
     public function beforeFilter()
     {
+        $this->Security->blackHoleCallback = 'blackhole';
         parent::beforeFilter();
-        $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit', 'edit'));
+
+        if(empty($this->params['prefix']))
+        {
+            $this->layout = 'default';
+            $this->Auth->allow();
+            return;
+        }
+        if(Admin::hasCapability('admin.admin.index'))
+        {
+            $this->Auth->allow(array('admin_save', 'root_menu', 'admin_edit'));
+        }
+    }
+
+    public function blackhole($type)
+    {
+        //exit(debug($type));
     }
 
     public function admin_edit($id) {
@@ -35,19 +51,30 @@ class MenusController extends AdminAppController {
 			$this->redirect(array('action' => 'create_page', $id));
 			exit();
         }
-
+        $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
         
         $view = Admin::getAdminView($menu);
         $url = $view['edit']['url'];
        	$this->set('id', $id);
         $this->request->data = $menu;
 
+        $menu_item_panel_header = false;
         $menu_item_content = '';
-        if($view['edit']['exists'] && Admin::hasCapability($this->Auth->user(), $url))
+        if(Admin::hasCapability($this->Auth->user(), $url))
         {
-            $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+            if($view['edit_panel_header']['exists'])
+            {
+                $Obj = Admin::getController($menu);
+                $method = $view['edit_panel_header']['method'];
+                $menu_item_panel_header = $Obj->$method($menu['Menu']['args']);
+            }
+            if($view['edit']['exists'] && Admin::hasCapability($this->Auth->user(), $url))
+            {
+                $menu_item_content = $this->requestAction($url, array('return', 'named' => array('admin_panel' => 1)));
+            }
         }
         $this->set('menu_item_content', $menu_item_content);
+        $this->set('menu_item_panel_header', $menu_item_panel_header);
     }
 
     public function admin_move()
@@ -94,43 +121,60 @@ class MenusController extends AdminAppController {
 
     public function admin_delete($id) {
 
-    	$this->request->data = $this->Menu->findById($id);
-    	if(empty($this->request->data))
-    	{
-    		exit('{"error":true, "message":"menu item does not exists"}');
-    	}
+        $this->request->data = $this->Menu->findById($id);
+        if(empty($this->request->data))
+        {
+            exit('{"error":true, "message":"menu item does not exists"}');
+        }
 
-    	
+        
         $view = Admin::getAdminView($this->request->data);
         $url = $view['delete']['url'];
 
         if($view['delete']['exists'])
         {
-    		$ok = $this->requestAction($url);
-    	}
-    	else
-    	{
-    		$ok = true;
-    	}
-    	if($ok !== false)
-    	{
-		    if($this->Menu->delete($id))
-		    {
-				exit('{"success":1,"error":0}');
-        	}
-        	else
-        	{
-				exit('{"error":1, "message":"error while deleting menu item"}');
-        	}
+            $ok = $this->requestAction($url);
         }
         else
         {
-        	exit('{"error":1, "message":"error while deleting associated page"}');
+            $ok = true;
         }
-		exit('{"error":1, "message":"unknown error"}');
+        if($ok !== false)
+        {
+            if($this->Menu->delete($id))
+            {
+                exit('{"success":1,"error":0}');
+            }
+            else
+            {
+                exit('{"error":1, "message":"error while deleting menu item"}');
+            }
+        }
+        else
+        {
+            exit('{"error":1, "message":"error while deleting associated page"}');
+        }
+        exit('{"error":1, "message":"unknown error"}');
+    }
+    public function admin_setDefault($id) {
+
+        $this->Menu->id = $id;
+    	if(!$this->Menu->exists())
+    	{
+    		exit('{"error":true, "message":"menu item does not exists"}');  
+        }
+        if($this->Menu->updateAll(array(
+            'Menu.default' => 0), array(
+            'Menu.default' => 1)))
+        {
+            $this->Menu->id = $id;
+            $this->Menu->saveField('default', 1);
+            exit('{"success":1,"error":0}');
+        }
+        exit('{"error":1, "message":"unknown error"}');
     }
     public function admin_save() {
-    	if(empty($this->request->data))
+    	if(!$this->request->is('put'))
     	{
     		$this->redirect('/');
     		exit();
@@ -163,6 +207,10 @@ class MenusController extends AdminAppController {
                 App::uses('Inflector', 'Utility');
                 $this->request->data['Menu']['slug'] = Inflector::slug($this->request->data['Menu']['slug'], '-');
             }
+            if(!empty($this->request->data['Menu']['custom_fields']))
+            {
+                $this->request->data['Menu']['custom_fields'] = json_encode($this->request->data['Menu']['custom_fields']);
+            }
 		    if($this->Menu->save($this->request->data, true, $fields))
 		    {
         		$this->Session->setFlash(__('Sauvegardé avec succés'), 'Admin.flash_success');
@@ -182,15 +230,24 @@ class MenusController extends AdminAppController {
 	public function admin_root_menu($id=null) {
         if(!empty($this->request->data))
         {
-            return $this->request->data['Menu']['id'];
+            return base64_encode(json_encode($this->request->data['RootMenuOptions']));
+            //return implode(';', $this->request->data['RootMenuOptions']);
         }
+        $this->request->data['RootMenuOptions'] = json_decode(base64_decode($id), true);
+        //list($redirectTo) = explode(';',$id);
+        //$this->request->data['RootMenuOptions'] = array('redirectTo' => $redirectTo);
 		$this->layout = 'Admin.admin_panel';
-		$this->request->data = $this->Menu->findById($id);
 	}
     public function root_menu($id = null)
     {
-        $menu = $this->Menu->children(Configure::read('Admin.Menu.id'));
-        exit(debug($menu));
+        $menuOptions = json_decode(base64_decode($id), true);
+        if(!empty($menuOptions['redirectTo']))
+        {
+            $this->redirect($menuOptions['redirectTo']);
+            exit();
+        }
+        $menus = $this->Menu->children(Configure::read('Admin.Menu.id'), true);
+        $this->set('menus', $menus);
     }
 
 	public function admin_create_menu($parent_id)
@@ -229,6 +286,26 @@ class MenusController extends AdminAppController {
     public function admin_list() {
         //$d = array('Menu'=>array('parent'))
         return $this->Menu->find('threaded');
+    }
+    public function getGeneratedTreeList() {
+        return $this->Menu->generateTreeList(null, '{n}.Menu.slug', '{n}.Menu.title', '_');
+    }
+    public function getList($parent_id, $depth) {
+        //$d = array('Menu'=>array('parent'))
+        $Menus = $this->Menu->children($parent_id);
+        $MenuById = array();
+        $MenuById[$parent_id] = array('children' => array());
+
+        foreach($Menus as &$M)
+        {
+            $M['children'] = array();
+            $MenuById[$M['Menu']['id']] = &$M;
+        }
+        foreach($Menus as &$M)
+        {
+            $MenuById[$M['Menu']['parent_id']]['children'][] = &$M;
+        }
+        return $MenuById[$parent_id]['children'];
     }
 
 }

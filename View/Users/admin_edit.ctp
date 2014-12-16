@@ -1,7 +1,15 @@
 <div class="users form">
 <?php echo $this->AdminForm->create('User'); ?>
     <fieldset>
-        <legend><?php echo __('Add User'); ?></legend>
+        <legend><?php 
+        if(empty($this->request->data['User']['id']))
+        {
+            echo __('Ajouter un utilisateur');
+        }
+        else
+        {
+            echo __('Editer l\'utilisateur: ').$this->request->data['User']['username'];
+        } ?></legend>
         <?php echo $this->AdminForm->input('username');
         echo $this->AdminForm->input('id', array('type' => 'hidden'));
         echo $this->AdminForm->input('new_password', array('type' => 'password'));

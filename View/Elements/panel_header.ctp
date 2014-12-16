@@ -3,8 +3,14 @@
 *	addNew is an array containing label, url and options for the link used to create 
 *	a new item
 */
-$addNew;
 
+Configure::write('Admin.variables.panel_header', 'TESTTTTT');
+
+$addNew;
+if(empty($after))
+{
+	$after = '';
+}
 if(empty($addNew['options']))
 {
 	$addNew['options'] = array();
@@ -33,6 +39,11 @@ array('class' => 'btn btn-default glyphicon glyphicon-arrow-left')); ?>
 <?php echo $title ?><?php 
 if(!empty($addNew['url']))
 {
-	echo  ' <small>'.$this->Html->link($addNew['label'], $addNew['url'], $addNew['options']).'</small>';
+	echo  ' '.$this->Html->link($addNew['label'], $addNew['url'], $addNew['options']).' '.$after;
+}
+?><?php 
+if(!empty($submit))
+{
+	echo ' '.$this->AdminForm->submit($submit);
 }
 ?></h1>

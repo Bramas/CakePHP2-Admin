@@ -1,5 +1,6 @@
 <?php
 
+App::uses('AdminAppController', 'Admin.Controller');
 App::uses('Admin', 'Admin.Lib');
 
 class AdminController extends AdminAppController {
@@ -8,6 +9,11 @@ class AdminController extends AdminAppController {
             'index' => 'Se connecter à l\'administration',
         );
 
+    public $helpers = array('Admin.AdminConfig');
+
+    public function admin_settings() {
+
+    }
     public function admin_index() {
 
 

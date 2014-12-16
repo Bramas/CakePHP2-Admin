@@ -1,5 +1,5 @@
 <?php
-class DbPostSchema extends CakeSchema {
+class DbEventSchema extends CakeSchema {
 
 	public function before($event = array()) {
 		return true;
@@ -8,12 +8,13 @@ class DbPostSchema extends CakeSchema {
 	public function after($event = array()) {
 	}
 
-	public $posts = array(
+	public $events = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'author_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
 		'state' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
-		'title' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
-		'featured_image' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
+		'title' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
+		'begin' => array('type' => 'datetime', 'null' => true, 'default' => '', 'default' => null),
+		'end'   => array('type' => 'datetime', 'null' => true, 'default' => '', 'default' => null),
 		'content' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),

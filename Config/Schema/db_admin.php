@@ -20,6 +20,8 @@ class DbAdminSchema extends CakeSchema {
 		'ip_address' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
+		'params' => array('type' => 'text', 'null' => false, 'default' => ''),
+		'custom_fields' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 	    'tableParameters' => array(
 	        'engine' => 'InnoDB',
@@ -67,7 +69,7 @@ class DbAdminSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
 		'capability' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50),
-		'args' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 200),
+		'args' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 200),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
 		        'engine' => 'InnoDB',
@@ -81,7 +83,7 @@ class DbAdminSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'role_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
 		'capability' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 50),
-		'args' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 200),
+		'args' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 200),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
 		        'engine' => 'InnoDB',

@@ -1,5 +1,6 @@
 
 
+var failedState = false;
 var adminConnected = true;
 function adminInitTinyMce()
 {
@@ -13,9 +14,38 @@ function adminInitTinyMce()
 	        "insertdatetime media table contextmenu paste"
 	    ],
 	    language_url : AdminBaseUrl+'js/tinymce/langs/fr_FR.js',
+	    file_picker_callback: tinymce_picker
 	});
 	//console.log(tinymce);
 	//tinymce.EditorManager.createEditor('PageContent');
+}
+
+var current_tinymce_callback = false;
+
+function tinymce_picker(callback, value, meta) {
+
+	tinymce.activeEditor.windowManager.open({
+	    title: "My html dialog",
+	    url: BaseUrl+'/media/finder/tinymce/layout:iframe',
+	    width: 700,
+	    height: 600
+	});
+	current_tinymce_callback = callback;
+	/*
+    // Provide file and text for the link dialog
+    if (meta.filetype == 'file') {
+        callback('mypage.html', {text: 'My text'});
+    }
+
+    // Provide image and alt text for the image dialog
+    if (meta.filetype == 'image') {
+        callback('myimage.jpg', {alt: 'My alt text'});
+    }
+
+    // Provide alternative source and posted for the media dialog
+    if (meta.filetype == 'media') {
+        callback('movie.mp4', {source2: 'alt.ogg', poster: 'image.jpg'});
+    }*/
 }
 
 function adminSetAjaxPageProgress(p)
@@ -54,7 +84,10 @@ function adminSelectLink(link)
 		link = this;
 	}
 	$('li').removeClass('active');
-	$('#jstree').jstree(true).deselect_all();
+	if($('#jstree').length)
+	{
+		$('#jstree').jstree(true).deselect_all();
+	}
 	$(link).addClass('active');
 }
 function adminSelectNode(node)
@@ -83,6 +116,7 @@ function adminConnexionLost()
 {
 	adminConnected = false;
 	$('#admin-connexion-status').html("La connexion à été perdu.").show('fast');
+	$('#admin-connexion-status').append(' <a class="link-modal-reconnect" href="#">se reconnecter</a>');
 }
 function adminConnexionWin()
 {
@@ -107,6 +141,7 @@ function adminLoadLayoutContent(state)
 {
 	if(state.url && state.url == window.location.pathname)
 	{
+		window.location.reload();
 		return;
 	}
 	url = state.url ? state.url : state;
@@ -131,6 +166,7 @@ function adminLoadLayoutContent(state)
 		error: function(){
 			adminSetAjaxPageProgress(1);
 			adminConnexionLost();
+			failedState = state;
 		},
 		success:function(data)
 		{
@@ -138,7 +174,8 @@ function adminLoadLayoutContent(state)
 			{
 				history.pushState(this, this.title, this.url);
 			}
-			adminSetLayoutContent(data)
+			adminSetLayoutContent(data);
+			failedState = false;
 		}
 	});
 }
@@ -167,9 +204,48 @@ function adminPanelLoaded()
 	$('a[data-toggle=tooltip]').tooltip();
 }
 
+jQuery(document).on('click', '.link-modal-reconnect',  function(){
+	console.log('ok');
+	jQuery('#dialog-reconnect').modal();
+})
+jQuery(document).on('submit', '#dialog-reconnect form', function(e){
+	e.preventDefault();
+	var data = {};
+	jQuery('#dialog-reconnect form input').each(function(){
+		if($(this).attr('name'))
+		{
+			data[$(this).attr('name')] = $(this).val();
+		} 
+	});
+	$.ajax({
+		url: BaseUrl+"users/login?ajax=1",
+		type:'POST',
+		data:jQuery('#dialog-reconnect form').serialize(),
+		dataType:"json",
+		error: function(){
+			adminSetAjaxPageProgress(1);
+			jQuery('#dialog-reconnect .error').html('Erreur');
+		},
+		success:function(data)
+		{
+			if(!data.success)
+			{
+				jQuery('#dialog-reconnect .error').html(data.message);
+				return;
+			}
+			jQuery('#dialog-reconnect').modal('hide');
+			if(failedState)
+			{
+				adminConnexionWin();
+				adminLoadLayoutContent(failedState)
+			}
+		}
+	});
+});
+
 jQuery(function($){
 	adminPanelLoaded();
-	history.replaceState({url:window.location.href})
+	history.replaceState({url:window.location.href}, document.title, window.location.href)
 
 
 	$('.nav[data-admin-toggle=ajax] li > a').on('click', function(ev){
@@ -190,22 +266,23 @@ jQuery(function($){
 		});
 	})
 
+
 	$(window).on('scroll', function(d){
-		console.log();
-		if($(window).scrollTop() > 45)
-		{
-			$('.admin-panel-header').addClass('fixed');
-			if($('.admin-panel-header').length)
-			{
-				$('.main').addClass('admin-fixed-panel-header');
-			}
-		}
-		else
+		if($('.admin-panel-header').length)
 		{
 			$('.admin-panel-header').removeClass('fixed');
 			if($('.admin-panel-header').length)
 			{
 				$('.main').removeClass('admin-fixed-panel-header');
+			}		
+
+			if($(window).scrollTop() > $('.admin-panel-header').offset().top -45)
+			{
+				$('.admin-panel-header').addClass('fixed');
+				if($('.admin-panel-header').length)
+				{
+					$('.main').addClass('admin-fixed-panel-header');
+				}
 			}
 		}
 	});

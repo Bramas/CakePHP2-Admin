@@ -1,20 +1,18 @@
 <?php 
 
 echo $this->element('Admin.panel_header', array(
-	'title'=>'Editer une actualité' , 
+	'title'=>'Editer un événement' , 
 	'backUrl' => array('action' => 'index')
 		));
 
 
-echo $this->AdminForm->create('Post');
+echo $this->AdminForm->create('Event');
 
 echo $this->AdminForm->input('id', array('type'=>'hidden'));
 echo $this->AdminForm->input('title', array('type' => 'text'));
+echo '<div class="form-group">De '.$this->AdminForm->date('begin', array('default'=>true,'label' => 'Début'));
+echo ' à '.$this->AdminForm->date('end', array('default'=>true,'label' => 'Fin')).' (format jj/mm/aaaa)</div>';
 echo $this->AdminForm->editor('content', array('label' => 'Contenu'));
-
-$this->Upload->setModel('Post');
-$this->Upload->setFormHelper($this->AdminForm);
-echo $this->Upload->input('featured_image', array('type' => 'file', 'label'=>'Image'));
 
 
 echo $this->AdminForm->submit('Enregistrer');

@@ -9,6 +9,9 @@ ln -s ../Plugin/Admin/Bakery/Posts/Model/Posts Model/Post.php
 ln -s ../Plugin/Admin/Bakery/Pages/View/Pages View/Pages
 ln -s ../Plugin/Admin/Bakery/Pages/Controller/PagesController.php Controller/PagesController.php
 ln -s ../Plugin/Admin/Bakery/Pages/Model/Pages Model/Page.php
+ln -s ../Plugin/Admin/Bakery/Events/View/Events View/Events
+ln -s ../Plugin/Admin/Bakery/Events/Controller/EventsController.php Controller/EventsController.php
+ln -s ../Plugin/Admin/Bakery/Events/Model/Events Model/Event.php
 
 on windows
 
@@ -93,6 +96,18 @@ class BakeShell extends AppShell {
         	if(strtolower($rep) == 'y')
 			{	
 				$this->copyFolderToApp('Pages');
+			}
+		}
+		$this->hr();
+		$rep = $this->in('Install Events?', array('y', 'n'), 'y');
+		if(strtolower($rep) == 'y')
+		{
+			$this->dispatchShell('schema create DbEvent --plugin Admin');
+			$this->hr();
+			$rep = $this->in('Create Events Controller, Model and Views?', array('y', 'n'), 'y');
+        	if(strtolower($rep) == 'y')
+			{	
+				$this->copyFolderToApp('Events');
 			}
 		}
 		$this->hr();

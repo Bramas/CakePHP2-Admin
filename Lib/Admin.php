@@ -77,7 +77,6 @@ class Admin {
                         );
                 }
             }
-
             return $map;
         });
     }

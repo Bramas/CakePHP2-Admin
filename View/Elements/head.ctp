@@ -1,5 +1,4 @@
 <?php
-$cdn = 1;
 if(isset($cdn))
 {
 	echo $this->Html->css('bootstrap.min.css');

@@ -9,6 +9,17 @@ ln -s ../Plugin/Admin/Bakery/Posts/Model/Posts Model/Post.php
 ln -s ../Plugin/Admin/Bakery/Pages/View/Pages View/Pages
 ln -s ../Plugin/Admin/Bakery/Pages/Controller/PagesController.php Controller/PagesController.php
 ln -s ../Plugin/Admin/Bakery/Pages/Model/Pages Model/Page.php
+
+on windows
+
+mklink PostsController.php ..\Plugin\admin\Bakery\Posts\Controller\PostsController.php
+mklink Post.php ..\Plugin\admin\Bakery\Posts\Model\Post.php
+mklink Posts ..\Plugin\admin\Bakery\Posts\View\Posts
+
+mklink PagesController.php ..\Plugin\admin\Bakery\Pages\Controller\PagesController.php
+mklink Page.php ..\Plugin\admin\Bakery\Pages\Model\Page.php
+mklink Pages ..\Plugin\admin\Bakery\Pages\View\Pages
+
 */
 
 class BakeShell extends AppShell {

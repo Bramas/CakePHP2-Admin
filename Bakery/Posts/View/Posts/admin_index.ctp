@@ -7,7 +7,8 @@ echo $this->element('Admin.panel_header', array(
 	'addNew' => array(
 		'label' => 'Nouvelle Actualité',
 		'url' => array('action' => 'edit')
-		)));
+		),
+	'after' => $this->AdminConfig->modalButton('posts','btn btn-default btn-sm')));
 
 
 $columns = array(
@@ -29,5 +30,9 @@ $actions = array(
 		'require' => array('posts.delete', 'id')
 		),
 	);
+
+echo $this->AdminConfig->group('posts');
+echo $this->AdminConfig->input('parent_menu', array('type'=>'menu', 'label'=>'Menu parent'));
+echo $this->AdminConfig->end();
 
 echo $this->element('Admin.table', array('actions'=>$actions , 'columns' => $columns, 'data' => $Posts, 'model' => 'Post'));

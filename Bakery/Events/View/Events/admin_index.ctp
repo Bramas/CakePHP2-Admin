@@ -1,5 +1,7 @@
 <?php
 
+
+
 echo $this->element('Admin.panel_header', array(
 	'title'=>'Agenda' , 
 	'addNew' => array(
@@ -18,18 +20,20 @@ $actions = array(
 		'label' => 'Editer',
 		'url' => array('action' => 'edit'),
 		'options' => array('class' => ''),
-		'require' => array('posts.edit', 'id')
+		'require' => array('events.edit', 'id')
 		),
 	'separator' => ' | ',
 	'delete' => array(
 		'label' => 'Corbeille',
 		'url' => array('action' => 'delete'),
 		'options' => array('class' => ''),
-		'require' => array('posts.delete', 'id')
+		'require' => array('events.delete', 'id')
 		),
 	);
-
+	
+	
 echo $this->AdminConfig->group('events');
 echo $this->AdminConfig->input('parent_menu', array('type'=>'menu', 'label'=>'Menu parent'));
 echo $this->AdminConfig->end();
+
 echo $this->element('Admin.table', array('actions'=>$actions , 'columns' => $columns, 'data' => $Events, 'model' => 'Event'));

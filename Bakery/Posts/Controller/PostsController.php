@@ -12,10 +12,18 @@ class PostsController extends AppController {
 		'Security',
 		'Auth' => array(
 			'authorize' => array('Admin.Admin')
-			)
+			),
+			'Paginator'
 		);
+	public $paginate = array(
+        'limit' => 10,
+        'order' => array(
+           'Post.created'=>'desc'
+        )
+    );
+	public $helpers = array('Media.Static', 'Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
 
-	public $helpers = array('Media.Static','Admin.AdminConfig','Admin.AdminForm','Upload.Upload');
+	public $adminName = 'Actualités';
 
 	public $adminViews = array(
 					'index' => array(
@@ -34,6 +42,7 @@ class PostsController extends AppController {
 			'create' => 'Créer une actualité',
 			'delete' => 'Supprimer les actualités'
 		);
+		
 	public $adminSearch = 'search';
 
 	public function beforeFilter()
@@ -66,7 +75,7 @@ class PostsController extends AppController {
         	}
         	if($this->Post->save($this->request->data))
         	{
-        		$this->Session->setFlash(__('La news a bien été enregistrée.'), 'Admin.flash_success');
+        		$this->Session->setFlash(__('L\'actualité a bien été enregistrée.'), 'Admin.flash_success');
         		$this->redirect(array($this->Post->id));
         		exit();
         	}
@@ -98,24 +107,57 @@ class PostsController extends AppController {
 
 	public function admin_index() {
 		//debug($this->Post->find('all'));
-		$this->set('Posts', $this->Post->find('all'));
+		$this->set('Posts', $this->Post->find('all', array('order' => array('Post.created DESC'))));
 	}
 	public function admin_delete($id) {
 		$this->Post->delete($id);
 		$this->redirect(array('action' => 'index'));
 		exit();
 	}
-	public function view($id) {
-		debug($this->Post->find('all'));
+	public function view($slug) {
+		if(strpos($slug, '-') === false)
+		{
+			$id = $slug;
+		}
+		else
+		{
+			list($id) = explode('-', $slug); 
+		}
+		//$this->layout = 'default_page';
+		$this->set('Post', $this->Post->findById($id));
 	}
-	public function index($options) {
-		list($count, $type) = explode('-',$options);
-		$this->set('Posts', $this->Post->find('all',array(
-			'limit' => $count)));
+	public function index($options = null) {
+		if(empty($options))
+		{
+			$count = 10;
+			$type = 'list';
+		}
+		else
+		{
+			list($count, $type) = explode('-',$options);
+		}
+		$options = $this->paginate;
+		$options['limit'] = $count;
+		
+		$this->Paginator->settings = $options;
+		$this->set('Posts', $this->Paginator->paginate('Post'));
 		$this->set('type', $type);
+	}
+	
+	public function getList($start, $count) {
+		$Posts = $this->Post->find('all',array(
+			'order' => array('Post.created DESC'),
+			'limit' => $count));
+		return $Posts;
 	}
 	public function search($terms)
 	{
+		$controller = 'posts';
+		$config = $this->requestAction('/config/get/posts');
+		if(!empty($config['parent_menu']))
+		{
+			$controller = $config['parent_menu'];
+		}	
 		$db = $this->Post->getDataSource();
 		$results = $db->fetchAll(
 		    'SELECT Post.id, Post.content, Post.title, MATCH (title, content) '.
@@ -129,7 +171,7 @@ class PostsController extends AppController {
 		{
 			$ret[] = array(
 				'url' => array(
-					'controller' => 'posts',
+					'controller' => $controller,
 					'action' => 'view',
 					$res['Post']['id'].'-'.Inflector::slug($res['Post']['title'], '-')
 					),

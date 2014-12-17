@@ -1,5 +1,9 @@
 <?php
 
+Router::connect(
+	'/admin/media',
+	array('controller' => 'media', 'plugin'=>'admin', 'admin' => true, 'action'=>'index')
+);
 
 Router::connect(
 	'/users/:action',

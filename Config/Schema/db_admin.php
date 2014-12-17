@@ -55,7 +55,10 @@ class DbAdminSchema extends CakeSchema {
 		'args' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 1000),
 		'title' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
 		'slug' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
-		'default' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'default' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),	
+		'custom_fields' => array('type' => 'text', 'null' => false, 'default' => ''),	
+		'params' => array('type' => 'text', 'null' => false, 'default' => ''),
+        'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		    'tableParameters' => array(
 		        'engine' => 'InnoDB',

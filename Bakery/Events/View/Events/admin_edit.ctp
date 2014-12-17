@@ -10,8 +10,11 @@ echo $this->AdminForm->create('Event');
 
 echo $this->AdminForm->input('id', array('type'=>'hidden'));
 echo $this->AdminForm->input('title', array('type' => 'text'));
-echo '<div class="form-group">De '.$this->AdminForm->date('begin', array('default'=>true,'label' => 'Début'));
-echo ' à '.$this->AdminForm->date('end', array('default'=>true,'label' => 'Fin')).' (format jj/mm/aaaa)</div>';
+echo $this->AdminForm->input('event_date', array('label' => 'Date (jj/mm/aaaa)', 'type'=>'text'));
+echo $this->AdminForm->input('event_end', array('label' => 'Date de fin (jj/mm/aaaa)', 'type'=>'text'));
+echo $this->AdminForm->input('event_time', array('label' => 'Heure', 'type'=>'text'));
+echo $this->AdminForm->input('location', array('label' => 'Lieu', 'type'=>'text'));
+echo $this->AdminForm->input('price', array('label' => 'Tarif', 'type'=>'text'));
 echo $this->AdminForm->editor('content', array('label' => 'Contenu'));
 
 

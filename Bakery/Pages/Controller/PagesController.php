@@ -36,27 +36,44 @@ class PagesController extends AppController {
  *
  * @var array
  */
-	public $uses = array('Page' , 'Admin.Menu');
+	public $uses = array('Page', 'Admin.Menu');
 
-	public $components = array('Auth');
+	public $components = array(
+		'Security',
+		'Auth'=>array(
+			'authorize' => array('Admin.Admin')
+			)
+		);
 
-	public $helpers = array('Admin.AdminForm');
+	public $adminName = 'Pages';
+	public $helpers = array('Media.Static', 'Admin.AdminForm');
 
 	public $adminViews = array(
 					'display' => array(
 						'title' => 'Afficher une page simple'
 					));
 	public $adminCapabilities = array(
+			'create' => 'Créer une nouvelle page',
 			'display' => 'Modifier une page',
 			'publish' => 'Publier les modifications d\'une page'
 		);
+		
 	public $adminSearch = 'search';
+	
     public function beforeFilter(){
         parent::beforeFilter();
         
         if(empty($this->params['prefix']))
         {
             $this->Auth->allow();
+        }
+        if(Configure::read('Admin.Menu.default'))
+        {
+	        $this->layout = 'home_page';
+        }
+        if(Admin::hasCapability('admin.menus.delete'))
+        {
+            $this->Auth->allow(array('admin_display_delete'));
         }
     }
 	public function admin_display_delete($id=null) {
@@ -140,7 +157,6 @@ class PagesController extends AppController {
 	public function display($id) {
 		$this->set($this->Page->findLastPublishedVersion($id));
 	}
-
 	public function search($terms)
 	{
 		$db = $this->Page->getDataSource();
@@ -159,11 +175,11 @@ class PagesController extends AppController {
 				'url' => array(
 					'controller' => 'pages',
 					'action' => 'view',
-					'slug'=>$res['Menu']['slug']
+					'slug' => $res['Menu']['slug']
 					),
 				'title' => $res['Menu']['title'],
 				'score' => $res[0]['Score'],
-				'type'  => 'Page',
+				'type' => 'Page',
 				'abstract' => $res['Page']['content']
 				);
 		}

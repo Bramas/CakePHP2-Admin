@@ -25,6 +25,7 @@
             <span class="icon-bar"></span>
           </button>
           <?php
+App::uses('Admin', 'Admin.Lib');
 
            echo $this->Html->link(Admin::getConfig('admin', 'site-title', 'Titre du Site'),'/',array('class'=>'navbar-brand')); ?>
         </div>
@@ -40,6 +41,7 @@
               </ul>
             </li>
             <li><?php echo $this->Html->link('Tableau de bord','/admin'); ?></li>
+            <li><?php echo $this->Html->link('Media','/admin/media'); ?></li>
             <li><a class="dropdown-toggle" data-toggle="dropdown" href="#">
       Utilisateurs <span class="caret"></span></a>
               <ul class="dropdown-menu">

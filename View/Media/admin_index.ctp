@@ -1,3 +1,4 @@
-<?php
+<iframe src="<?php
 
-debug($Medias);
+echo $this->Html->url('/media/finder/tinymce/layout:iframe'); ?>">
+</iframe>

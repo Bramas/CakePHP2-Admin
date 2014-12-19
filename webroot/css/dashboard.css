@@ -3,8 +3,13 @@
  */
 
 /* Move down content because we have a fixed navbar that is 50px tall */
+html, .container-fluid, .row, .main, #layoutContent{
+    height: 100%;
+}
+
 body {
   padding-top: 50px;
+    height: 100%;
 }
 
 h1.admin-panel-header.fixed
@@ -260,6 +265,17 @@ h1.admin-panel-header.fixed
 }
 .main .page-header {
   margin-top: 0;
+}
+
+
+/*
+ * media iframe
+ */
+.admin-media-finder-frame
+{
+    height: 100%;
+    width: 100%;
+    border: 0;
 }
 
 

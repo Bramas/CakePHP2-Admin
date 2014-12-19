@@ -1,11 +1,6 @@
 <?php
 
 Router::connect(
-	'/admin/media',
-	array('controller' => 'media', 'plugin'=>'admin', 'admin' => true, 'action'=>'index')
-);
-
-Router::connect(
 	'/users/:action',
 	array('controller' => 'users', 'plugin'=>'admin', 'admin' => false)
 );
@@ -52,15 +47,18 @@ foreach(array(
 
 
 
-/*Router::connect(
-	'/admin/users/:action',
-	array('controller' => 'users', 'plugin'=>'admin', 'admin' => false)
-);
-
 Router::connect(
-	'/admin/users/:action/*',
-	array('controller' => 'users', 'plugin'=>'admin', 'admin' => false)
-);*/
+	'/admin/media',
+	array('controller' => 'adminMedia', 'plugin'=>'admin', 'admin' => true, 'action'=>'index')
+);
+Router::connect(
+	'/admin/media/:action',
+	array('controller' => 'adminMedia', 'plugin'=>'admin', 'admin' => true)
+);
+Router::connect(
+	'/admin/media/:action/*',
+	array('controller' => 'adminMedia', 'plugin'=>'admin', 'admin' => true)
+);
 
 
 

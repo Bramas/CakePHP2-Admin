@@ -17,3 +17,25 @@ Configure::write('Extensions',array(
                                         ));
 
 Configure::write('Routing.prefixes', array('admin'));
+
+
+if(!function_exists('texte_resume_brut'))
+{
+	function texte_resume_brut($texte, $nbreCar)
+	{
+		$texte 				= trim(strip_tags($texte));
+		if(is_numeric($nbreCar))
+		{
+			$PointSuspension	= '...';
+			$texte			.= ' ';
+			$LongueurAvant		= strlen($texte);
+			if ($LongueurAvant > $nbreCar) {
+				$texte = substr($texte, 0, strpos($texte, ' ', $nbreCar));
+				if ($PointSuspension!='') {
+					$texte	.= $PointSuspension;
+				}
+			}
+		}
+		return $texte;
+	};
+}

@@ -14,7 +14,7 @@ function adminInitTinyMce()
 	        "insertdatetime media table contextmenu paste textcolor"
 	    ],
 	    relative_urls : false,
-		document_base_url : BaseUrl,
+		document_base_url : '',
 	    language_url : AdminBaseUrl+'js/tinymce/langs/fr_FR.js',
 	    file_picker_callback: tinymce_picker,
 	    toolbar: "insertfile undo redo | styleselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
@@ -33,7 +33,7 @@ function tinymce_picker(callback, value, meta) {
 
 	tinymce.activeEditor.windowManager.open({
 	    title: "My html dialog",
-	    url: BaseUrl+'/media/finder/tinymce/layout:modal',
+	    url: BaseUrl+'/media/finder/tinymce/layout:iframe_modal',
 	    width: 700,
 	    height: 600
 	});

@@ -124,7 +124,7 @@ class PostsController extends AppController {
 			list($id) = explode('-', $slug); 
 		}
 		//$this->layout = 'default_page';
-		$this->set('Post', $this->Post->findById($id));
+		$this->set('Post', Cache::remember('post_'.$id, function() use ($id) { return $this->Post->findById($id); }) );
 	}
 	public function index($options = null) {
 		if(empty($options))

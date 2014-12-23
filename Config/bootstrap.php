@@ -39,3 +39,9 @@ if(!function_exists('texte_resume_brut'))
 		return $texte;
 	};
 }
+
+
+Cache::config('admin_menus', array('engine' => 'File', 'groups'=>array('admin_menus')));
+
+Cache::config('admin_config', array('engine' => 'File', 'groups'=>array('admin_config')));
+

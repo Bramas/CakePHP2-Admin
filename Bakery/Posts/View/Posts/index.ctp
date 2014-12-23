@@ -5,7 +5,9 @@ $this->end();
 ?><div class="posts">
 <?php 
 $controller = 'posts';
-$config = $this->requestAction('/config/get/posts');
+
+App::uses('AdminConfig', 'Admin.Lib');
+$config = AdminConfig::read('posts');
 if(!empty($config['parent_menu']))
 {
 	$controller = $config['parent_menu'];

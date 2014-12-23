@@ -14,4 +14,9 @@ class Menu extends AppModel
 		}
 		return $query;
 	}
+	
+	public function afterSave($created, $options = array())
+	{
+		Cache::clearGroup('admin_menus', 'admin_menus');
+	}
 }

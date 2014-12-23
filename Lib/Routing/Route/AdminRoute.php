@@ -46,7 +46,9 @@ class AdminRoute extends CakeRoute {
 
         if(empty($params['slug']))
         {
-            $menu = $Menu->findByDefault(1);
+            $menu = Cache::remember('menus_default', function() use ($Menu) {
+                        return $Menu->findByDefault(1);
+            },'admin_menus');
             if(empty($menu))
             {
                 throw new NotFoundException('Aucune page d\'accueil n\'a été trouvée');
@@ -54,7 +56,9 @@ class AdminRoute extends CakeRoute {
         }
         else
         {
-            $menu = $Menu->findBySlug($params['slug']);
+            $menu = Cache::remember('menus_slug_'.$params['slug'], function() use ($Menu, $params) {
+                        return $Menu->findBySlug($params['slug']);
+                    },'admin_menus');
         }
 
         

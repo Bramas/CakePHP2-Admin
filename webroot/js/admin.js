@@ -33,7 +33,7 @@ function tinymce_picker(callback, value, meta) {
 
 	tinymce.activeEditor.windowManager.open({
 	    title: "My html dialog",
-	    url: BaseUrl+'/media/finder/tinymce/layout:modal',
+	    url: BaseUrl+'/media/finder/tinymce/layout:iframe_modal',
 	    width: 700,
 	    height: 600
 	});

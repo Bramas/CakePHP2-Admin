@@ -69,7 +69,7 @@ class PagesController extends AppController {
         }
         if(Configure::read('Admin.Menu.default'))
         {
-	        $this->layout = 'home_page';
+	        //$this->layout = 'home_page';
         }
         if(Admin::hasCapability('admin.menus.delete'))
         {

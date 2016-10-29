@@ -85,6 +85,9 @@ class PostsController extends AppController {
         {
         	$this->request->data = $this->Post->findById($id);
         }
+        if(!empty($this->request->data['Post'])) {
+        	$this->request->data['Post']['created'] = str_replace(' ','T',$this->request->data['Post']['created']);
+        }
 	}
 	public function admin_index_options($options = null) {
 		if(!empty($this->request->data))

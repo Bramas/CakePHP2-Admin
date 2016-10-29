@@ -19,7 +19,7 @@
       <div class="container-fluid">
         <div class="navbar-header">
           
-          <a class="navbar-brand" href="#">Project name</a>
+          <?php echo $this->Html->link(Admin::getConfig('admin', 'site-title', 'Titre du Site'),'/',array('class'=>'navbar-brand')); ?> ?>
         </div>
         <div class="navbar-collapse collapse">
           

@@ -13,7 +13,8 @@ $this->start('left');
 echo $this->element('list_actus', array('limit'=>10));
 
 $controller = 'posts';
-$config = $this->requestAction('/config/get/posts');
+App::uses('AdminConfig', 'Admin.Lib');
+$config = AdminConfig::read('posts');;
 if(!empty($config['parent_menu']))
 {
 	$controller = $config['parent_menu'];

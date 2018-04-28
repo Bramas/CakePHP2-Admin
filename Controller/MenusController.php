@@ -57,7 +57,7 @@ class MenusController extends AdminAppController {
 			exit();
         }
         $menu['Menu']['custom_fields'] = json_decode($menu['Menu']['custom_fields'], true);
-        
+
         $view = Admin::getAdminView($menu);
         $url = $view['edit']['url'];
        	$this->set('id', $id);
@@ -104,7 +104,7 @@ class MenusController extends AdminAppController {
     		}
     		$position++;
     	}
-	
+
     	$newPosition = $this->request->data['position'];
     	$delta = $newPosition - $position;
     	$out = '';
@@ -132,7 +132,7 @@ class MenusController extends AdminAppController {
             exit('{"error":true, "message":"menu item does not exists"}');
         }
 
-        
+
         $view = Admin::getAdminView($this->request->data);
         $url = $view['delete']['url'];
 
@@ -166,7 +166,7 @@ class MenusController extends AdminAppController {
         $this->Menu->id = $id;
     	if(!$this->Menu->exists())
     	{
-    		exit('{"error":true, "message":"menu item does not exists"}');  
+    		exit('{"error":true, "message":"menu item does not exists"}');
         }
         if($this->Menu->updateAll(array(
             'Menu.default' => 0), array(
@@ -267,7 +267,7 @@ class MenusController extends AdminAppController {
 	    $this->redirect(array('action' => 'create_page', $this->Menu->id));
 	    exit();
 	}
-	public function admin_create_page($id, $controller = null, $action = null, $plugin = null)
+	public function admin_create_page($id, $controller = '', $action = '', $plugin = '')
 	{
 		if(!empty($action)){
 
@@ -282,7 +282,7 @@ class MenusController extends AdminAppController {
 			$this->redirect('/');
 			exit();
 		}
-		
+
 		$Views = Admin::getViews();
 		$this->set('id', $id);
 		$this->set('Views', $Views);

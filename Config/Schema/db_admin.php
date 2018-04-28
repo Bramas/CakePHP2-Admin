@@ -28,7 +28,7 @@ class DbAdminSchema extends CakeSchema {
 		'role_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
 		'rights' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 1000),
 		'email' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 250),
-		'email_verified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1), 
+		'email_verified' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
 		'active' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
 		'ip_address' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 50),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
@@ -48,15 +48,15 @@ class DbAdminSchema extends CakeSchema {
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'lft' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
 		'rght' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
-		'parent_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
+		'parent_id' => array('type' => 'integer', 'default' => null, 'length' => 10),
 		'plugin' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 150),
 		'controller' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 150),
 		'view' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 250),
 		'args' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 1000),
 		'title' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
 		'slug' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 500),
-		'default' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),	
-		'custom_fields' => array('type' => 'text', 'null' => false, 'default' => ''),	
+		'default' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => 1),
+		'custom_fields' => array('type' => 'text', 'null' => false, 'default' => ''),
 		'params' => array('type' => 'text', 'null' => false, 'default' => ''),
         'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
@@ -69,9 +69,9 @@ class DbAdminSchema extends CakeSchema {
 		    );
 	public $roles = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
-		'alias' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100),
-		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 100),
-		'parent_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
+		'alias' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 100),
+		'name' => array('type' => 'string', 'null' => false, 'default' => '', 'length' => 100),
+		'parent_id' => array('type' => 'integer', 'default' => null, 'length' => 10),
 		'protected' => array('type' => 'integer', 'null' => false, 'default' => '', 'length' => 1),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array(
@@ -94,7 +94,7 @@ class DbAdminSchema extends CakeSchema {
 		        'encoding' => 'utf8_general_ci'
 			    )
 		    );
-			
+
 	public $role_capabilities = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
 		'role_id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10),
@@ -108,5 +108,5 @@ class DbAdminSchema extends CakeSchema {
 		        'encoding' => 'utf8_general_ci'
 			    )
 		    );
-			
+
 }

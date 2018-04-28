@@ -38,7 +38,7 @@ class Admin {
 
 
     public static function getConfig($group, $name, $default=null) {
-        $o = new Object();
+        $o = new CakeObject();
         $config = $o->requestAction('/admin/config/get/'.$group);
         if(isset($config[$name]))
         {
@@ -64,7 +64,7 @@ class Admin {
                     $p = empty($info['plugin'])? '' : $info['plugin'].'.';
                     $map[$controllerName][$p.$info['controller'].'.'.$cap] = $name;
                 }
-                
+
             }
 
             return $map;
@@ -106,7 +106,7 @@ class Admin {
                 }
                 foreach($info['adminMenu'] as $label => $url)
                 {
-                    $map[$label] = 
+                    $map[$label] =
                     array_merge($url ,
                         array(
                             'plugin' => $info['plugin'],
@@ -336,14 +336,14 @@ class Admin {
 
     public static function currentUser()
     {
-            $o = new Object();
+            $o = new CakeObject();
         return $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
     }
     public static function isAdministrator($user = null)
     {
 		if(!is_array($user))
         {
-            $o = new Object();
+            $o = new CakeObject();
             $user = $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
         }
         if($user['Role']['alias'] == 'administrator')
@@ -358,7 +358,7 @@ class Admin {
         {
             $args = $capability;
             $capability = $user;
-            $o = new Object();
+            $o = new CakeObject();
             $user = $o->requestAction(array('controller' => 'users', 'plugin'=>'admin', 'action' => 'currentUser', 'admin' => false));
         }
         if($user['Role']['alias'] == 'administrator')
@@ -372,7 +372,7 @@ class Admin {
 
         $capability = strtolower($capability);
         $capability = trim($capability, '.');
-        
+
         if(empty($user))
         {
             return false;

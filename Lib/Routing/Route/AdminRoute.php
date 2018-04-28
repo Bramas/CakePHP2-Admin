@@ -1,7 +1,7 @@
 <?php
 
 class AdminRoute extends CakeRoute {
- 
+
     function parse($url) {
         //return false;//exit(debug(parent::parse($url)));
         //explode('/', $url)
@@ -33,13 +33,13 @@ class AdminRoute extends CakeRoute {
                     }
                 }
             }
-            
+
         }
         else
         {
             $url = array('pass' => array());
         }
-       
+
 
         App::uses('Menu','Admin.Model');
         $Menu = new Menu();
@@ -61,7 +61,6 @@ class AdminRoute extends CakeRoute {
                     },'admin_menus');
         }
 
-        
 	    if(empty($menu))
         {
             return false;
@@ -74,7 +73,7 @@ class AdminRoute extends CakeRoute {
             }
             return $params;
         }
-        
+
         App::uses('Admin', 'Admin.Lib');
         $view = Admin::getAdminView($menu);
         if(empty($view))
@@ -114,7 +113,7 @@ class AdminRoute extends CakeRoute {
         }
         return $params;
     }
-    
+
     function match($url)
     {
         if(isset($url['admin']) && $url['admin'] === true)
@@ -133,7 +132,7 @@ class AdminRoute extends CakeRoute {
         if(isset($url['default']))
         {
             if($url['default'])
-            { 
+            {
                 return '/';
             }
             unset($url['default']);
@@ -142,8 +141,8 @@ class AdminRoute extends CakeRoute {
         {
             return $url['slug'];
         }
-        
+
         return parent::match($url);
     }
- 
+
 }
